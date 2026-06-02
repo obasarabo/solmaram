@@ -98,6 +98,15 @@ add_action( 'customize_register', function ( $wp_customize ) {
         'mime_type' => 'image',
     ] ) );
 
+    // Freeze-drying teaser image
+    $wp_customize->add_section( 'sm_fd', [ 'title' => __( 'Freeze-Drying Teaser', 'solmaram' ), 'priority' => 33 ] );
+    $wp_customize->add_setting( 'sm_fd_image', [ 'sanitize_callback' => 'absint' ] );
+    $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'sm_fd_image', [
+        'label'     => __( 'Freeze-Drying Photo', 'solmaram' ),
+        'section'   => 'sm_fd',
+        'mime_type' => 'image',
+    ] ) );
+
     // About us section
     $wp_customize->add_section( 'sm_about', [ 'title' => __( 'About Us Section', 'solmaram' ), 'priority' => 35 ] );
     $wp_customize->add_setting( 'sm_about_text', [ 'default' => '', 'sanitize_callback' => 'wp_kses_post' ] );

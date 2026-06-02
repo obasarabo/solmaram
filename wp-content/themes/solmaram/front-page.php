@@ -57,9 +57,12 @@
       ?>
       <?php if ( $best_sellers ) : ?>
       <div class="grid-4 products-grid">
-        <?php foreach ( $best_sellers as $product ) : ?>
+        <?php foreach ( $best_sellers as $product ) :
+            $GLOBALS['post'] = get_post( $product->get_id() );
+            setup_postdata( $GLOBALS['post'] );
+        ?>
           <?php wc_get_template_part( 'content', 'product' ); ?>
-        <?php endforeach; ?>
+        <?php endforeach; wp_reset_postdata(); ?>
       </div>
       <?php endif; ?>
 
@@ -119,14 +122,14 @@
 
       <?php
       $reviews = get_comments( [
-          'status'    => 'approve',
-          'type'      => 'review',
-          'number'    => 12,
-          'meta_key'  => 'rating',
-          'meta_value'=> '',
+          'status'       => 'approve',
+          'type'         => 'review',
+          'number'       => 12,
+          'meta_key'     => 'rating',
+          'meta_value'   => '1',
           'meta_compare' => '>=',
-          'orderby'   => 'comment_date_gmt',
-          'order'     => 'DESC',
+          'orderby'      => 'comment_date_gmt',
+          'order'        => 'DESC',
       ] );
       ?>
       <?php if ( $reviews ) : ?>

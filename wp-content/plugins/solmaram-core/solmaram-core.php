@@ -15,25 +15,27 @@ defined( 'ABSPATH' ) || exit;
 define( 'SM_CORE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SM_CORE_URL',  plugin_dir_url( __FILE__ ) );
 
-require_once SM_CORE_PATH . 'includes/class-recipe-meta.php';
-require_once SM_CORE_PATH . 'includes/class-free-shipping-bar.php';
-require_once SM_CORE_PATH . 'includes/class-instagram-feed.php';
-require_once SM_CORE_PATH . 'includes/class-csv-export.php';
-require_once SM_CORE_PATH . 'includes/class-trust-counters.php';
-require_once SM_CORE_PATH . 'admin/settings-page.php';
-
 add_action( 'plugins_loaded', function () {
+    if ( ! class_exists( 'WooCommerce' ) ) return;
+
+    require_once SM_CORE_PATH . 'includes/class-recipe-meta.php';
+    require_once SM_CORE_PATH . 'includes/class-free-shipping-bar.php';
+    require_once SM_CORE_PATH . 'includes/class-instagram-feed.php';
+    require_once SM_CORE_PATH . 'includes/class-csv-export.php';
+    require_once SM_CORE_PATH . 'includes/class-trust-counters.php';
+    require_once SM_CORE_PATH . 'admin/settings-page.php';
+
     SM_Recipe_Meta::init();
     SM_Free_Shipping_Bar::init();
     SM_Instagram_Feed::init();
     SM_CSV_Export::init();
     SM_Trust_Counters::init();
     SM_Admin_Settings::init();
-} );
 
-/* ── AJAX: product filter (FR-01.3) ─────────────────────────────────── */
-add_action( 'wp_ajax_solmaram_filter_products',        'solmaram_ajax_filter_products' );
-add_action( 'wp_ajax_nopriv_solmaram_filter_products', 'solmaram_ajax_filter_products' );
+    /* ── AJAX: product filter (FR-01.3) ──────────────────────────── */
+    add_action( 'wp_ajax_solmaram_filter_products',        'solmaram_ajax_filter_products' );
+    add_action( 'wp_ajax_nopriv_solmaram_filter_products', 'solmaram_ajax_filter_products' );
+} );
 
 function solmaram_ajax_filter_products() {
     check_ajax_referer( 'sm_filter', 'nonce' );

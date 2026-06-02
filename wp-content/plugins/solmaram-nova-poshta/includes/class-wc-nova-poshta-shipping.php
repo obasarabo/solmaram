@@ -46,7 +46,7 @@ class WC_SM_Nova_Poshta_Shipping extends WC_Shipping_Method {
             $weight += ( $w > 0 ? $w : 0.3 ) * $item['quantity'];
         }
 
-        $city_recipient_ref = WC()->session ? WC()->session->get( 'np_city_ref' ) : '';
+        $city_recipient_ref = ( WC() && WC()->session ) ? WC()->session->get( 'np_city_ref' ) : '';
         $declared_cost      = (float) WC()->cart->get_subtotal();
 
         // Branch-to-branch

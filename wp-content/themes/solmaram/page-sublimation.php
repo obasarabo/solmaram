@@ -103,6 +103,7 @@ get_header();
       <div class="grid-2" style="margin-top:20px; gap:16px">
         <?php
         $cats = get_terms( [ 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true ] );
+        if ( is_wp_error( $cats ) ) $cats = [];
         foreach ( $cats as $cat ) :
             if ( $cat->slug === 'uncategorized' ) continue;
         ?>

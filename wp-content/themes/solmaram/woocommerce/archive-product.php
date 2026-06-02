@@ -25,6 +25,7 @@ get_header();
               'parent'     => 0,
               'exclude'    => [ get_option( 'default_product_cat' ) ],
           ] );
+          if ( is_wp_error( $categories ) ) $categories = [];
           foreach ( $categories as $cat ) :
               $checked = in_array( $cat->slug, (array) ( $_GET['product_cat'] ?? [] ), true );
           ?>
@@ -37,6 +38,7 @@ get_header();
             <?php
             // Subcategories
             $subcats = get_terms( [ 'taxonomy' => 'product_cat', 'hide_empty' => true, 'parent' => $cat->term_id ] );
+            if ( is_wp_error( $subcats ) ) $subcats = [];
             foreach ( $subcats as $sub ) :
                 $sub_checked = in_array( $sub->slug, (array) ( $_GET['product_cat'] ?? [] ), true );
             ?>

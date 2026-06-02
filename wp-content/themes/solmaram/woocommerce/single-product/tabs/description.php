@@ -19,6 +19,7 @@ $heading = apply_filters( 'woocommerce_product_description_heading', __( 'Produc
   <?php
   // Use cases block (FR-01.2)
   $use_cases = wp_get_post_terms( $product->get_id(), 'product_tag', [ 'fields' => 'names' ] );
+  if ( is_wp_error( $use_cases ) ) $use_cases = [];
   $relevant  = array_intersect( $use_cases, [ 'Snack', 'Cooking', 'Ready Meal' ] );
   if ( ! empty( $relevant ) ) :
   ?>

@@ -87,7 +87,19 @@ class WC_SM_Monobank_Gateway extends WC_Payment_Gateway {
     }
 
     public function handle_callback() {
-        $payload = json_decode( file_get_contents( 'php://input' ), true );
+        $body = file_get_contents( 'php://input' );
+        if ( ! $body ) { status_header( 400 ); exit; }
+
+        // Verify X-Sign header: base64( sha256( base64(body) + token ) )
+        $token    = $this->get_option( 'token' );
+        $x_sign   = $_SERVER['HTTP_X_SIGN'] ?? '';
+        $expected = base64_encode( hash( 'sha256', base64_encode( $body ) . $token, true ) );
+        if ( ! hash_equals( $expected, $x_sign ) ) {
+            status_header( 400 );
+            exit( 'Invalid signature' );
+        }
+
+        $payload = json_decode( $body, true );
         if ( ! $payload ) { status_header( 400 ); exit; }
 
         $invoice_id = sanitize_text_field( $payload['invoiceId'] ?? '' );
@@ -96,7 +108,7 @@ class WC_SM_Monobank_Gateway extends WC_Payment_Gateway {
         $order      = wc_get_order( $reference );
         if ( ! $order ) exit;
 
-        if ( $status === 'success' ) {
+        if ( $status === 'success' && ! $order->is_paid() ) {
             $order->payment_complete( $invoice_id );
             $order->add_order_note( __( 'Monobank payment confirmed.', 'solmaram' ) );
         } elseif ( in_array( $status, [ 'failure', 'reversed' ], true ) ) {

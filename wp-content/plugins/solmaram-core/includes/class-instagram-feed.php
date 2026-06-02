@@ -47,6 +47,7 @@ class SM_Instagram_Feed {
     }
 
     public static function ajax_refresh() {
+        check_ajax_referer( 'sm_refresh_instagram' );
         if ( ! current_user_can( 'manage_options' ) ) wp_die( -1 );
         delete_transient( self::TRANSIENT_KEY );
         wp_send_json_success( [ 'cleared' => true ] );

@@ -58,7 +58,7 @@ class SM_Admin_Settings {
                          value="<?php echo esc_attr( get_option( 'sm_instagram_token', '' ) ); ?>" class="regular-text">
                   <p class="description"><?php esc_html_e( 'Instagram Basic Display API long-lived access token.', 'solmaram' ); ?></p>
                   <button type="button" class="button"
-                          onclick="fetch(ajaxurl + '?action=sm_refresh_instagram').then(() => alert('Cache cleared'))">
+                          onclick="fetch(ajaxurl + '?action=sm_refresh_instagram&_wpnonce=<?php echo esc_js( wp_create_nonce( 'sm_refresh_instagram' ) ); ?>').then(() => alert('Cache cleared'))">
                     <?php esc_html_e( 'Clear Instagram Cache', 'solmaram' ); ?>
                   </button>
                 </td>

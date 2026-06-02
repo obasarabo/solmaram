@@ -57,8 +57,8 @@ class WC_SM_LiqPay_Gateway extends WC_Payment_Gateway {
             'order_id'    => (string) $order->get_id(),
             'version'     => '3',
             'sandbox'     => $is_sb,
-            'server_url'  => esc_url( home_url( '/wc-api/sm_liqpay_callback/' ) ),
-            'result_url'  => esc_url( $this->get_return_url( $order ) ),
+            'server_url'  => home_url( '/wc-api/sm_liqpay_callback/' ),
+            'result_url'  => $this->get_return_url( $order ),
         ];
 
         $checkout_url = $api->get_checkout_url( $params );
@@ -100,7 +100,7 @@ class WC_SM_LiqPay_Gateway extends WC_Payment_Gateway {
 
         $status = $response['status'] ?? '';
 
-        if ( in_array( $status, [ 'success', 'sandbox' ], true ) ) {
+        if ( in_array( $status, [ 'success', 'sandbox' ], true ) && ! $order->is_paid() ) {
             $order->payment_complete( $response['payment_id'] ?? '' );
             $order->add_order_note( __( 'LiqPay payment confirmed.', 'solmaram' ) );
         } elseif ( $status === 'failure' ) {

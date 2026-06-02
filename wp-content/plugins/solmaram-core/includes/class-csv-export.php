@@ -68,8 +68,13 @@ class SM_CSV_Export {
         $date_to   = sanitize_text_field( $_POST['sm_date_to'] ?? '' );
         $status    = sanitize_text_field( $_POST['sm_order_status'] ?? '' );
 
-        if ( $date_from ) $args['date_created'] = '>=' . $date_from;
-        if ( $date_to )   $args['date_created'] = ( isset( $args['date_created'] ) ? str_replace( '>=', '', $args['date_created'] ) . '...' : '' ) . $date_to;
+        if ( $date_from && $date_to ) {
+            $args['date_created'] = $date_from . '...' . $date_to;
+        } elseif ( $date_from ) {
+            $args['date_created'] = '>=' . $date_from;
+        } elseif ( $date_to ) {
+            $args['date_created'] = '<=' . $date_to;
+        }
         if ( $status )    $args['status'] = $status;
 
         $orders = wc_get_orders( $args );
