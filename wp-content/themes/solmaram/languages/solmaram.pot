@@ -1,0 +1,435 @@
+# SolMaram Translation Template
+# Copyright (C) 2024 SolMaram
+# Text Domain: solmaram
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: SolMaram 1.0.0\n"
+"Report-Msgid-Bugs-To: hello@solmaram.com\n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11) ? 0 : ((n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20)) ? 1 : 2);\n"
+"X-Generator: WP-CLI 2.x\n"
+
+msgid "Skip to content"
+msgstr ""
+
+msgid "Primary"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "My Account"
+msgstr ""
+
+msgid "Cart"
+msgstr ""
+
+msgid "Menu"
+msgstr ""
+
+msgid "Your Cart"
+msgstr ""
+
+msgid "Close cart"
+msgstr ""
+
+msgid "Shopping cart"
+msgstr ""
+
+msgid "View Cart"
+msgstr ""
+
+msgid "Checkout"
+msgstr ""
+
+msgid "Your cart is empty."
+msgstr ""
+
+msgid "Remove this item"
+msgstr ""
+
+msgid "Subtotal"
+msgstr ""
+
+msgid "Company"
+msgstr ""
+
+msgid "Shop"
+msgstr ""
+
+msgid "Contact"
+msgstr ""
+
+msgid "© %1$s %2$s. All rights reserved."
+msgstr ""
+
+msgid "We accept:"
+msgstr ""
+
+msgid "Visa · Mastercard · LiqPay · Monobank · Cash on delivery"
+msgstr ""
+
+msgid "Pure Nature, Maximum Nutrition"
+msgstr ""
+
+msgid "Shop Now"
+msgstr ""
+
+msgid "100% Natural"
+msgstr ""
+
+msgid "Rich in Vitamins"
+msgstr ""
+
+msgid "No Preservatives"
+msgstr ""
+
+msgid "Long Shelf Life"
+msgstr ""
+
+msgid "Best Sellers"
+msgstr ""
+
+msgid "Our most loved products"
+msgstr ""
+
+msgid "View All Products"
+msgstr ""
+
+msgid "What is Freeze-Drying?"
+msgstr ""
+
+msgid "Freeze-drying removes moisture while keeping up to 97% of nutrients intact, giving our products an incredible shelf life of up to 25 years — with no refrigeration needed."
+msgstr ""
+
+msgid "Learn More"
+msgstr ""
+
+msgid "About SolMaram"
+msgstr ""
+
+msgid "What Our Customers Say"
+msgstr ""
+
+msgid "Blog & Recipes"
+msgstr ""
+
+msgid "All Posts"
+msgstr ""
+
+msgid "Follow us on Instagram"
+msgstr ""
+
+msgid "What is Freeze-Drying (Sublimation)?"
+msgstr ""
+
+msgid "How we preserve 100% of nature's goodness"
+msgstr ""
+
+msgid "Freeze-Drying vs Other Methods"
+msgstr ""
+
+msgid "Criteria"
+msgstr ""
+
+msgid "Freeze-Drying"
+msgstr ""
+
+msgid "Freezing"
+msgstr ""
+
+msgid "Conventional Drying"
+msgstr ""
+
+msgid "Nutrients retained"
+msgstr ""
+
+msgid "Up to 97%"
+msgstr ""
+
+msgid "~60–80%"
+msgstr ""
+
+msgid "~20–40%"
+msgstr ""
+
+msgid "Shelf life"
+msgstr ""
+
+msgid "Up to 25 years"
+msgstr ""
+
+msgid "Up to 1 year"
+msgstr ""
+
+msgid "1–3 years"
+msgstr ""
+
+msgid "Requires refrigeration"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "Original texture"
+msgstr ""
+
+msgid "Preserved"
+msgstr ""
+
+msgid "Changes"
+msgstr ""
+
+msgid "Significantly changes"
+msgstr ""
+
+msgid "Weight"
+msgstr ""
+
+msgid "Very light"
+msgstr ""
+
+msgid "Heavy"
+msgstr ""
+
+msgid "Light"
+msgstr ""
+
+msgid "Explore Our Products"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Use Case"
+msgstr ""
+
+msgid "Snack"
+msgstr ""
+
+msgid "Cooking"
+msgstr ""
+
+msgid "Ready Meal"
+msgstr ""
+
+msgid "Price"
+msgstr ""
+
+msgid "Min price"
+msgstr ""
+
+msgid "Max price"
+msgstr ""
+
+msgid "Any"
+msgstr ""
+
+msgid "Sort by"
+msgstr ""
+
+msgid "Most popular"
+msgstr ""
+
+msgid "Newest"
+msgstr ""
+
+msgid "Price: low to high"
+msgstr ""
+
+msgid "Price: high to low"
+msgstr ""
+
+msgid "No products found."
+msgstr ""
+
+msgid "Contact & Delivery"
+msgstr ""
+
+msgid "Payment"
+msgstr ""
+
+msgid "Already have an account? <a href=\"%s\">Log in</a>"
+msgstr ""
+
+msgid "Contact Details"
+msgstr ""
+
+msgid "Delivery"
+msgstr ""
+
+msgid "Estimated delivery: 1–3 business days via Nova Poshta"
+msgstr ""
+
+msgid "Order Comment (optional)"
+msgstr ""
+
+msgid "Notes about your order, e.g. special delivery instructions"
+msgstr ""
+
+msgid "Continue to Payment"
+msgstr ""
+
+msgid "Payment Method"
+msgstr ""
+
+msgid "Order Summary"
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Order History"
+msgstr ""
+
+msgid "Saved Addresses"
+msgstr ""
+
+msgid "Profile Settings"
+msgstr ""
+
+msgid "Log Out"
+msgstr ""
+
+msgid "Search results for: %s"
+msgstr ""
+
+msgid "Search again…"
+msgstr ""
+
+msgid "Products"
+msgstr ""
+
+msgid "Articles & Recipes"
+msgstr ""
+
+msgid "Nothing matched your search. Try different keywords, or browse our popular products:"
+msgstr ""
+
+msgid "Page not found"
+msgstr ""
+
+msgid "The page you're looking for doesn't exist. Try our popular products:"
+msgstr ""
+
+msgid "Back to Home"
+msgstr ""
+
+msgid "Prep time"
+msgstr ""
+
+msgid "Servings"
+msgstr ""
+
+msgid "Ingredients"
+msgstr ""
+
+msgid "Steps"
+msgstr ""
+
+msgid "Used in This Recipe"
+msgstr ""
+
+msgid "Related Articles"
+msgstr ""
+
+msgid "Ideal for"
+msgstr ""
+
+msgid "Product Description"
+msgstr ""
+
+msgid "Out of stock"
+msgstr ""
+
+msgid "%d out of 5 stars"
+msgstr ""
+
+msgid "Drying method comparison"
+msgstr ""
+
+msgid "How We Make It"
+msgstr ""
+
+msgid "Quality Certificates"
+msgstr ""
+
+msgid "Add %s more to get free shipping"
+msgstr ""
+
+msgid "🎉 You have free shipping!"
+msgstr ""
+
+msgid "Order #%d — SolMaram"
+msgstr ""
+
+msgid "Awaiting LiqPay payment."
+msgstr ""
+
+msgid "LiqPay payment confirmed."
+msgstr ""
+
+msgid "LiqPay payment failed."
+msgstr ""
+
+msgid "Awaiting Monobank payment."
+msgstr ""
+
+msgid "Monobank payment confirmed."
+msgstr ""
+
+msgid "Monobank payment failed."
+msgstr ""
+
+msgid "Nova Poshta — Branch Pickup"
+msgstr ""
+
+msgid "Nova Poshta — Courier Delivery"
+msgstr ""
+
+msgid "Ukrposhta — Branch Pickup"
+msgstr ""
+
+msgid "Ukrposhta — Home Delivery"
+msgstr ""
+
+msgid "City"
+msgstr ""
+
+msgid "Start typing your city…"
+msgstr ""
+
+msgid "Branch"
+msgstr ""
+
+msgid "Select city first"
+msgstr ""
+
+msgid "Select city first…"
+msgstr ""
+
+msgid "Street & Building"
+msgstr ""
+
+msgid "Street, building number"
+msgstr ""
+
+msgid "Customers Served"
+msgstr ""
+
+msgid "Orders Shipped"
+msgstr ""
+
+msgid "Years of Experience"
+msgstr ""
