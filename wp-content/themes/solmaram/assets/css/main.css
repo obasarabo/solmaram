@@ -1,3 +1,79 @@
+/* ── Language switcher ─────────────────────────────────────────────── */
+.lang-switcher {
+  position: relative;
+}
+
+.lang-switcher__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: none;
+  cursor: pointer;
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: .04em;
+  transition: border-color .15s, background .15s;
+  font-family: var(--font-body);
+}
+.lang-switcher__toggle:hover,
+.lang-switcher__toggle[aria-expanded="true"] {
+  border-color: var(--color-primary);
+  background: var(--color-bg-alt);
+}
+
+.lang-switcher__chevron {
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+.lang-switcher__toggle[aria-expanded="true"] .lang-switcher__chevron {
+  transform: rotate(180deg);
+}
+
+.lang-switcher__dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 140px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  list-style: none;
+  z-index: 150;
+  overflow: hidden;
+  animation: lang-drop-in .15s ease;
+}
+@keyframes lang-drop-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.lang-switcher__option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background .12s;
+  letter-spacing: .04em;
+}
+.lang-switcher__option:hover { background: var(--color-bg-alt); color: var(--color-primary); }
+.lang-switcher__option.is-active { color: var(--color-primary); background: var(--color-bg-alt); }
+
+.lang-switcher__name {
+  font-weight: 400;
+  color: var(--color-text-muted);
+  font-size: .8rem;
+  letter-spacing: 0;
+}
+
 /* ── Header ────────────────────────────────────────────────────────── */
 .site-header {
   position: sticky;

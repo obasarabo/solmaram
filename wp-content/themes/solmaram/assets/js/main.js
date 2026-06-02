@@ -2,6 +2,31 @@
 (function () {
   'use strict';
 
+  /* ── Language switcher ──────────────────────────────────────────── */
+  const langToggle   = document.querySelector('.js-lang-toggle');
+  const langDropdown = document.querySelector('.lang-switcher__dropdown');
+  if ( langToggle && langDropdown ) {
+    langToggle.addEventListener('click', () => {
+      const open = langToggle.getAttribute('aria-expanded') === 'true';
+      langToggle.setAttribute('aria-expanded', String(!open));
+      langDropdown.hidden = open;
+    });
+    // Close on outside click or Escape
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#lang-switcher')) {
+        langToggle.setAttribute('aria-expanded', 'false');
+        langDropdown.hidden = true;
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        langToggle.setAttribute('aria-expanded', 'false');
+        langDropdown.hidden = true;
+        langToggle.focus();
+      }
+    });
+  }
+
   /* ── Mobile nav ─────────────────────────────────────────────────── */
   const hamburger = document.querySelector('.js-nav-toggle');
   const nav       = document.querySelector('.site-nav');
