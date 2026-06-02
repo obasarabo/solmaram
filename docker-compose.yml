@@ -1,4 +1,5 @@
 services:
+
   db:
     image: mysql:8.0
     restart: unless-stopped
@@ -9,12 +10,23 @@ services:
       MYSQL_PASSWORD: wppass
     volumes:
       - db_data:/var/lib/mysql
+    command: >
+      --innodb-buffer-pool-size=256M
+      --innodb-redo-log-capacity=134217728
+      --innodb-flush-method=O_DIRECT
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # 128 MB cap; evict least-recently-used keys when full
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru --save ""
 
   wordpress:
-    image: wordpress:6.7-php8.1-apache
+    build: ./docker          # extends official image + adds phpredis extension
     restart: unless-stopped
     depends_on:
       - db
+      - redis
     ports:
       - "8080:80"
     environment:
@@ -23,26 +35,47 @@ services:
       WORDPRESS_DB_USER: wp
       WORDPRESS_DB_PASSWORD: wppass
       WORDPRESS_DEBUG: "1"
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WP_REDIS_HOST',         'redis' );
+        define( 'WP_REDIS_PORT',         6379 );
+        define( 'WP_REDIS_TIMEOUT',      1 );
+        define( 'WP_REDIS_READ_TIMEOUT', 1 );
+        define( 'WP_CACHE_KEY_SALT',     'solmaram_' );
+        define( 'WP_CACHE',              true );
     volumes:
+      - wp_core:/var/www/html
       - ./wp-content:/var/www/html/wp-content
       - wp_uploads:/var/www/html/wp-content/uploads
+      - ./docker/php.ini:/usr/local/etc/php/conf.d/solmaram.ini:ro
 
   wpcli:
-    image: wordpress:cli-php8.1
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.cli
     restart: "no"
     depends_on:
       - db
       - wordpress
+      - redis
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DB_USER: wp
       WORDPRESS_DB_PASSWORD: wppass
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WP_REDIS_HOST',         'redis' );
+        define( 'WP_REDIS_PORT',         6379 );
+        define( 'WP_REDIS_TIMEOUT',      1 );
+        define( 'WP_REDIS_READ_TIMEOUT', 1 );
+        define( 'WP_CACHE_KEY_SALT',     'solmaram_' );
+        define( 'WP_CACHE',              true );
     volumes:
+      - wp_core:/var/www/html
       - ./wp-content:/var/www/html/wp-content
       - wp_uploads:/var/www/html/wp-content/uploads
     user: "33:33"
 
 volumes:
   db_data:
+  wp_core:
   wp_uploads:
