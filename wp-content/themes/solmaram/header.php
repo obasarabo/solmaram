@@ -43,7 +43,7 @@
       <!-- Language selector (Polylang) -->
       <?php
       if ( function_exists( 'pll_the_languages' ) ) :
-          $languages = pll_the_languages( [ 'raw' => 1 ] );
+          $languages = pll_the_languages( [ 'raw' => 1, 'hide_if_no_translation' => 0 ] );
           if ( count( $languages ) > 1 ) :
               $current = null;
               foreach ( $languages as $lang ) {
@@ -63,7 +63,7 @@
         <ul class="lang-switcher__dropdown" role="listbox" aria-label="<?php esc_attr_e( 'Languages', 'solmaram' ); ?>" hidden>
           <?php foreach ( $languages as $lang ) : ?>
             <li role="option" aria-selected="<?php echo $lang['current_lang'] ? 'true' : 'false'; ?>">
-              <a href="<?php echo esc_url( $lang['url'] ); ?>"
+              <a href="<?php echo esc_url( $lang['no_translation'] ? pll_home_url( $lang['slug'] ) : $lang['url'] ); ?>"
                  class="lang-switcher__option <?php echo $lang['current_lang'] ? 'is-active' : ''; ?>"
                  hreflang="<?php echo esc_attr( $lang['slug'] ); ?>"
                  <?php echo $lang['current_lang'] ? 'aria-current="true"' : ''; ?>>
