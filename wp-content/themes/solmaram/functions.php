@@ -174,9 +174,15 @@ add_action( 'init', function () {
     }
 } );
 
-// For non-default languages, convert the translated shop page query into a
-// product archive so WooCommerce renders the product grid instead of a blank page.
-// WooCommerce's own rewrite rules only cover the default-language shop page.
+// Products are language-agnostic — the same catalogue shows in all languages.
+// 1. Tell Polylang not to manage 'product' as a translated post type.
+add_filter( 'pll_get_post_types', function ( $post_types ) {
+    unset( $post_types['product'] );
+    return $post_types;
+} );
+
+// 2. Convert the translated shop page query to a product archive at priority 1,
+//    before Polylang (priority 2) can add any language filter.
 add_action( 'pre_get_posts', function ( $q ) {
     if ( is_admin() || ! $q->is_main_query() ) {
         return;
@@ -185,19 +191,42 @@ add_action( 'pre_get_posts', function ( $q ) {
         return;
     }
     if ( pll_current_language() === pll_default_language() ) {
-        return; // default language handled natively by WooCommerce
+        return;
     }
-    $shop_id            = (int) get_option( 'woocommerce_shop_page_id' ); // already filtered to current lang
+    $shop_id = (int) get_option( 'woocommerce_shop_page_id' );
     if ( ! $shop_id || ! $q->is_page( $shop_id ) ) {
         return;
     }
     $q->set( 'post_type', 'product' );
-    $q->set( 'page_id', '' );
-    $q->is_page             = false;
-    $q->is_singular         = false;
+    // parse_query() converts page_id → p before pre_get_posts fires;
+    // clear both so get_posts() doesn't add "AND ID = 7" to the SQL.
+    $q->set( 'page_id', 0 );
+    $q->set( 'p', 0 );
+    $q->set( 'pagename', '' );
+    $q->set( 'lang', '' );
+    $q->is_page              = false;
+    $q->is_singular          = false;
     $q->is_post_type_archive = true;
-    $q->is_archive          = true;
-}, 11 ); // after WooCommerce's own pre_get_posts at 10
+    $q->is_archive           = true;
+}, 1 );
+
+// 3. Safety net: after all pre_get_posts hooks, strip any residual language
+//    tax_query or lang var from product archive queries.
+add_action( 'pre_get_posts', function ( $q ) {
+    if ( is_admin() || ! $q->is_main_query() ) {
+        return;
+    }
+    if ( $q->get( 'post_type' ) !== 'product' ) {
+        return;
+    }
+    $q->set( 'lang', '' );
+    $tax_query = $q->get( 'tax_query' );
+    if ( is_array( $tax_query ) ) {
+        $q->set( 'tax_query', array_values( array_filter( $tax_query, function ( $clause ) {
+            return ! is_array( $clause ) || ( isset( $clause['taxonomy'] ) && $clause['taxonomy'] !== 'language' );
+        } ) ) );
+    }
+}, 999 );
 
 /* ── hreflang for Polylang (FR-12) ────────────────────────────────── */
 add_action( 'wp_head', function () {
