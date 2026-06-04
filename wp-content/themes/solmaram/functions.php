@@ -143,6 +143,62 @@ add_filter( 'body_class', function ( $classes ) {
     return $classes;
 } );
 
+/* ── Polylang: translate WooCommerce page IDs per language (FR-03/04) ─ */
+// Without Polylang for WooCommerce, WC options always store the default-language
+// page IDs. Filter each option so WC recognises the translated pages (e.g. the
+// EN shop archive renders correctly instead of as a blank page).
+// IDs are captured once at init before the filters run to avoid recursion.
+add_action( 'init', function () {
+    if ( is_admin() ) {
+        return;
+    }
+    if ( ! function_exists( 'pll_current_language' ) || ! function_exists( 'pll_get_post' ) ) {
+        return;
+    }
+    $wc_page_options = [
+        'woocommerce_shop_page_id',
+        'woocommerce_cart_page_id',
+        'woocommerce_checkout_page_id',
+        'woocommerce_myaccount_page_id',
+    ];
+    foreach ( $wc_page_options as $option ) {
+        $default_id = (int) get_option( $option ); // capture before filter is added
+        if ( ! $default_id ) {
+            continue;
+        }
+        add_filter( "pre_option_{$option}", function () use ( $default_id ) {
+            $lang          = pll_current_language();
+            $translated_id = $lang ? (int) pll_get_post( $default_id, $lang ) : 0;
+            return $translated_id ?: $default_id;
+        } );
+    }
+} );
+
+// For non-default languages, convert the translated shop page query into a
+// product archive so WooCommerce renders the product grid instead of a blank page.
+// WooCommerce's own rewrite rules only cover the default-language shop page.
+add_action( 'pre_get_posts', function ( $q ) {
+    if ( is_admin() || ! $q->is_main_query() ) {
+        return;
+    }
+    if ( ! function_exists( 'pll_current_language' ) || ! function_exists( 'pll_default_language' ) ) {
+        return;
+    }
+    if ( pll_current_language() === pll_default_language() ) {
+        return; // default language handled natively by WooCommerce
+    }
+    $shop_id            = (int) get_option( 'woocommerce_shop_page_id' ); // already filtered to current lang
+    if ( ! $shop_id || ! $q->is_page( $shop_id ) ) {
+        return;
+    }
+    $q->set( 'post_type', 'product' );
+    $q->set( 'page_id', '' );
+    $q->is_page             = false;
+    $q->is_singular         = false;
+    $q->is_post_type_archive = true;
+    $q->is_archive          = true;
+}, 11 ); // after WooCommerce's own pre_get_posts at 10
+
 /* ── hreflang for Polylang (FR-12) ────────────────────────────────── */
 add_action( 'wp_head', function () {
     if ( function_exists( 'pll_the_languages' ) ) {
