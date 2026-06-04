@@ -43,30 +43,41 @@
       <!-- Language selector (Polylang) -->
       <?php
       if ( function_exists( 'pll_the_languages' ) ) :
-          $languages = pll_the_languages( [ 'raw' => 1, 'hide_if_no_translation' => 0 ] );
-          if ( count( $languages ) > 1 ) :
-              $current = null;
-              foreach ( $languages as $lang ) {
-                  if ( $lang['current_lang'] ) { $current = $lang; break; }
+          $languages    = pll_the_languages( [ 'raw' => 1 ] );
+          $current_slug = function_exists( 'pll_current_language' ) ? pll_current_language() : '';
+          // pll_the_languages() falls back to the front page URL for WooCommerce
+          // archives because they are not standard posts. Resolve the correct
+          // per-language shop URL here using the translated page ID.
+          if ( function_exists( 'is_shop' ) && is_shop() ) {
+              $shop_id = wc_get_page_id( 'shop' );
+              foreach ( $languages as $slug => $lang ) {
+                  $translated_id = pll_get_post( $shop_id, $slug );
+                  if ( $translated_id ) {
+                      $languages[ $slug ]['url'] = get_permalink( $translated_id );
+                  }
               }
+          }
+          if ( count( $languages ) > 1 ) :
       ?>
       <div class="lang-switcher" id="lang-switcher">
         <button class="lang-switcher__toggle js-lang-toggle"
                 aria-haspopup="listbox"
                 aria-expanded="false"
                 aria-label="<?php esc_attr_e( 'Select language', 'solmaram' ); ?>">
-          <span class="lang-switcher__current"><?php echo esc_html( strtoupper( $current['slug'] ?? 'UK' ) ); ?></span>
+          <span class="lang-switcher__current"><?php echo esc_html( strtoupper( $current_slug ?: 'UK' ) ); ?></span>
           <svg class="lang-switcher__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
             <path d="m6 9 6 6 6-6"/>
           </svg>
         </button>
         <ul class="lang-switcher__dropdown" role="listbox" aria-label="<?php esc_attr_e( 'Languages', 'solmaram' ); ?>" hidden>
-          <?php foreach ( $languages as $lang ) : ?>
-            <li role="option" aria-selected="<?php echo $lang['current_lang'] ? 'true' : 'false'; ?>">
-              <a href="<?php echo esc_url( $lang['no_translation'] ? pll_home_url( $lang['slug'] ) : $lang['url'] ); ?>"
-                 class="lang-switcher__option <?php echo $lang['current_lang'] ? 'is-active' : ''; ?>"
+          <?php foreach ( $languages as $lang ) :
+              $is_current = ! empty( $lang['current_lang'] );
+          ?>
+            <li role="option" aria-selected="<?php echo $is_current ? 'true' : 'false'; ?>">
+              <a href="<?php echo esc_url( $lang['url'] ); ?>"
+                 class="lang-switcher__option <?php echo $is_current ? 'is-active' : ''; ?>"
                  hreflang="<?php echo esc_attr( $lang['slug'] ); ?>"
-                 <?php echo $lang['current_lang'] ? 'aria-current="true"' : ''; ?>>
+                 <?php echo $is_current ? 'aria-current="true"' : ''; ?>>
                 <?php echo esc_html( strtoupper( $lang['slug'] ) ); ?>
                 <span class="lang-switcher__name"><?php echo esc_html( $lang['name'] ); ?></span>
               </a>

@@ -81,7 +81,13 @@
       <div class="fd-teaser__content">
         <h2 class="section-title"><?php esc_html_e( 'What is Freeze-Drying?', 'solmaram' ); ?></h2>
         <p><?php esc_html_e( 'Freeze-drying removes moisture while keeping up to 97% of nutrients intact, giving our products an incredible shelf life of up to 25 years — with no refrigeration needed.', 'solmaram' ); ?></p>
-        <a href="<?php echo esc_url( home_url( '/sublimation/' ) ); ?>" class="btn btn-outline mt-24">
+        <a href="<?php
+            $sub_id  = 35; // EN sublimation page — pll_get_post resolves to current language
+            $sub_url = function_exists( 'pll_get_post' )
+                ? get_permalink( pll_get_post( $sub_id, pll_current_language() ) ?: $sub_id )
+                : get_permalink( $sub_id );
+            echo esc_url( $sub_url );
+        ?>" class="btn btn-outline mt-24">
           <?php esc_html_e( 'Learn More', 'solmaram' ); ?>
         </a>
       </div>
@@ -125,9 +131,7 @@
           'status'       => 'approve',
           'type'         => 'review',
           'number'       => 12,
-          'meta_key'     => 'rating',
-          'meta_value'   => '1',
-          'meta_compare' => '>=',
+          'meta_query'   => [ [ 'key' => 'rating', 'value' => 4, 'compare' => '>=', 'type' => 'NUMERIC' ] ],
           'orderby'      => 'comment_date_gmt',
           'order'        => 'DESC',
       ] );
