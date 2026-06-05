@@ -1,0 +1,472 @@
+# Ukrainian translation for SolMaram theme
+# Copyright (C) 2024 SolMaram
+# Text Domain: solmaram
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: SolMaram 1.0.0\n"
+"Report-Msgid-Bugs-To: hello@solmaram.com\n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: 2026-06-05 00:00+0000\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11) ? 0 : ((n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20)) ? 1 : 2);\n"
+"X-Generator: Claude\n"
+
+# Header
+msgid "Skip to content"
+msgstr "Перейти до вмісту"
+
+msgid "Primary"
+msgstr "Основна"
+
+msgid "Select language"
+msgstr "Вибрати мову"
+
+msgid "Languages"
+msgstr "Мови"
+
+msgid "Search"
+msgstr "Пошук"
+
+msgid "My Account"
+msgstr "Мій акаунт"
+
+msgid "Cart"
+msgstr "Кошик"
+
+msgid "Menu"
+msgstr "Меню"
+
+# Mini-cart
+msgid "Your Cart"
+msgstr "Ваш кошик"
+
+msgid "Close cart"
+msgstr "Закрити кошик"
+
+msgid "Shopping cart"
+msgstr "Кошик покупок"
+
+msgid "View Cart"
+msgstr "Переглянути кошик"
+
+msgid "Checkout"
+msgstr "Оформити замовлення"
+
+msgid "Your cart is empty."
+msgstr "Ваш кошик порожній."
+
+msgid "Remove this item"
+msgstr "Видалити цей товар"
+
+msgid "Subtotal"
+msgstr "Проміжний підсумок"
+
+# Footer
+msgid "Pure Nature, Maximum Nutrition"
+msgstr "Чиста природа, максимум поживності"
+
+msgid "Footer \xe2\x80\x93 Company"
+msgstr "Підвал \xe2\x80\x93 Компанія"
+
+msgid "Footer \xe2\x80\x93 Shop"
+msgstr "Підвал \xe2\x80\x93 Магазин"
+
+msgid "Company"
+msgstr "Компанія"
+
+msgid "Shop"
+msgstr "Магазин"
+
+msgid "Contact"
+msgstr "Контакти"
+
+msgid "© %1$s %2$s. All rights reserved."
+msgstr "© %1$s %2$s. Всі права захищені."
+
+msgid "We accept:"
+msgstr "Ми приймаємо:"
+
+msgid "Visa · Mastercard · LiqPay · Monobank · Cash on delivery"
+msgstr "Visa · Mastercard · LiqPay · Monobank · Накладений платіж"
+
+# Homepage — hero
+msgid "Shop Now"
+msgstr "Купити зараз"
+
+# Homepage — values
+msgid "100% Natural"
+msgstr "100% натуральне"
+
+msgid "Rich in Vitamins"
+msgstr "Багатий на вітаміни"
+
+msgid "No Preservatives"
+msgstr "Без консервантів"
+
+msgid "Long Shelf Life"
+msgstr "Тривалий термін зберігання"
+
+# Homepage — best sellers
+msgid "Best Sellers"
+msgstr "Популярні товари"
+
+msgid "Our most loved products"
+msgstr "Наші найулюбленіші продукти"
+
+msgid "View All Products"
+msgstr "Переглянути всі товари"
+
+# Homepage — freeze-drying teaser
+msgid "What is Freeze-Drying?"
+msgstr "Що таке ліофілізація?"
+
+msgid "Freeze-drying removes moisture while keeping up to 97% of nutrients intact, giving our products an incredible shelf life of up to 25 years — with no refrigeration needed."
+msgstr "Ліофілізація видаляє вологу, зберігаючи до 97% поживних речовин, забезпечуючи неймовірний термін зберігання до 25 років — без потреби в охолодженні."
+
+msgid "Learn More"
+msgstr "Дізнатися більше"
+
+# Homepage — about
+msgid "About SolMaram"
+msgstr "Про SolMaram"
+
+# Homepage — reviews
+msgid "What Our Customers Say"
+msgstr "Що кажуть наші клієнти"
+
+msgid "%d out of 5 stars"
+msgstr "%d з 5 зірок"
+
+# Homepage — blog
+msgid "Blog & Recipes"
+msgstr "Блог та рецепти"
+
+msgid "All Posts"
+msgstr "Усі публікації"
+
+# Homepage — Instagram
+msgid "Follow us on Instagram"
+msgstr "Слідкуйте за нами в Instagram"
+
+# Sublimation page
+msgid "What is Freeze-Drying (Sublimation)?"
+msgstr "Що таке ліофілізація (сублімація)?"
+
+msgid "How we preserve 100% of nature's goodness"
+msgstr "Як ми зберігаємо 100% природної користі"
+
+msgid "Freeze-Drying vs Other Methods"
+msgstr "Ліофілізація проти інших методів"
+
+msgid "Criteria"
+msgstr "Критерій"
+
+msgid "Freeze-Drying"
+msgstr "Ліофілізація"
+
+msgid "Freezing"
+msgstr "Заморожування"
+
+msgid "Conventional Drying"
+msgstr "Традиційне сушіння"
+
+msgid "Nutrients retained"
+msgstr "Збереження поживних речовин"
+
+msgid "Up to 97%"
+msgstr "До 97%"
+
+msgid "~60\xe2\x80\x9380%"
+msgstr "~60\xe2\x80\x9380%"
+
+msgid "~20\xe2\x80\x9340%"
+msgstr "~20\xe2\x80\x9340%"
+
+msgid "Shelf life"
+msgstr "Термін зберігання"
+
+msgid "Up to 25 years"
+msgstr "До 25 років"
+
+msgid "Up to 1 year"
+msgstr "До 1 року"
+
+msgid "1\xe2\x80\x933 years"
+msgstr "1\xe2\x80\x933 роки"
+
+msgid "Requires refrigeration"
+msgstr "Потрібне охолодження"
+
+msgid "No"
+msgstr "Ні"
+
+msgid "Yes"
+msgstr "Так"
+
+msgid "Original texture"
+msgstr "Первісна текстура"
+
+msgid "Preserved"
+msgstr "Збережена"
+
+msgid "Changes"
+msgstr "Змінюється"
+
+msgid "Significantly changes"
+msgstr "Суттєво змінюється"
+
+msgid "Weight"
+msgstr "Вага"
+
+msgid "Very light"
+msgstr "Дуже легке"
+
+msgid "Heavy"
+msgstr "Важке"
+
+msgid "Light"
+msgstr "Легке"
+
+msgid "Explore Our Products"
+msgstr "Ознайомтеся з нашими товарами"
+
+msgid "Drying method comparison"
+msgstr "Порівняння методів сушіння"
+
+msgid "How We Make It"
+msgstr "Як ми це виробляємо"
+
+msgid "Quality Certificates"
+msgstr "Сертифікати якості"
+
+# Shop / catalogue
+msgid "Filter"
+msgstr "Фільтр"
+
+msgid "Category"
+msgstr "Категорія"
+
+msgid "Use Case"
+msgstr "Призначення"
+
+msgid "Snack"
+msgstr "Перекус"
+
+msgid "Cooking"
+msgstr "Приготування"
+
+msgid "Ready Meal"
+msgstr "Готова страва"
+
+msgid "Price"
+msgstr "Ціна"
+
+msgid "Min price"
+msgstr "Мінімальна ціна"
+
+msgid "Max price"
+msgstr "Максимальна ціна"
+
+msgid "Any"
+msgstr "Будь-яка"
+
+msgid "Sort by"
+msgstr "Сортувати за"
+
+msgid "Most popular"
+msgstr "Найпопулярніші"
+
+msgid "Newest"
+msgstr "Новинки"
+
+msgid "Price: low to high"
+msgstr "Ціна: від низької до високої"
+
+msgid "Price: high to low"
+msgstr "Ціна: від високої до низької"
+
+msgid "No products found."
+msgstr "Товарів не знайдено."
+
+# Checkout
+msgid "Contact & Delivery"
+msgstr "Контакти та доставка"
+
+msgid "Payment"
+msgstr "Оплата"
+
+msgid "Already have an account? <a href=\"%s\">Log in</a>"
+msgstr "Вже маєте акаунт? <a href=\"%s\">Увійти</a>"
+
+msgid "Contact Details"
+msgstr "Контактні дані"
+
+msgid "Delivery"
+msgstr "Доставка"
+
+msgid "Estimated delivery: 1\xe2\x80\x933 business days via Nova Poshta"
+msgstr "Орієнтовний термін: 1\xe2\x80\x933 робочі дні через Нову Пошту"
+
+msgid "Order Comment (optional)"
+msgstr "Коментар до замовлення (необов'язково)"
+
+msgid "Notes about your order, e.g. special delivery instructions"
+msgstr "Примітки до замовлення, наприклад, особливі інструкції з доставки"
+
+msgid "Continue to Payment"
+msgstr "Перейти до оплати"
+
+msgid "Payment Method"
+msgstr "Спосіб оплати"
+
+msgid "Order Summary"
+msgstr "Підсумок замовлення"
+
+# My account
+msgid "Dashboard"
+msgstr "Особистий кабінет"
+
+msgid "Order History"
+msgstr "Історія замовлень"
+
+msgid "Saved Addresses"
+msgstr "Збережені адреси"
+
+msgid "Profile Settings"
+msgstr "Налаштування профілю"
+
+msgid "Log Out"
+msgstr "Вийти"
+
+# Search
+msgid "Search results for: %s"
+msgstr "Результати пошуку: %s"
+
+msgid "Search again\xe2\x80\xa6"
+msgstr "Шукати знову\xe2\x80\xa6"
+
+msgid "Products"
+msgstr "Товари"
+
+msgid "Articles & Recipes"
+msgstr "Статті та рецепти"
+
+msgid "Nothing matched your search. Try different keywords, or browse our popular products:"
+msgstr "Нічого не знайдено. Спробуйте інші ключові слова або перегляньте наші популярні товари:"
+
+# 404
+msgid "Page not found"
+msgstr "Сторінку не знайдено"
+
+msgid "The page you're looking for doesn't exist. Try our popular products:"
+msgstr "Сторінка, яку ви шукаєте, не існує. Перегляньте наші популярні товари:"
+
+msgid "Back to Home"
+msgstr "На головну"
+
+# Recipes / blog
+msgid "Prep time"
+msgstr "Час підготовки"
+
+msgid "Servings"
+msgstr "Порції"
+
+msgid "Ingredients"
+msgstr "Інгредієнти"
+
+msgid "Steps"
+msgstr "Кроки"
+
+msgid "Used in This Recipe"
+msgstr "Використовується в цьому рецепті"
+
+msgid "Related Articles"
+msgstr "Пов'язані статті"
+
+# Product page
+msgid "Ideal for"
+msgstr "Ідеально для"
+
+msgid "Product Description"
+msgstr "Опис товару"
+
+msgid "Out of stock"
+msgstr "Немає в наявності"
+
+# Shipping bar
+msgid "Add %s more to get free shipping"
+msgstr "Додайте ще %s для безкоштовної доставки"
+
+msgid "\xf0\x9f\x8e\x89 You have free shipping!"
+msgstr "\xf0\x9f\x8e\x89 У вас безкоштовна доставка!"
+
+# Payment / order statuses
+msgid "Order #%d \xe2\x80\x94 SolMaram"
+msgstr "Замовлення #%d \xe2\x80\x94 SolMaram"
+
+msgid "Awaiting LiqPay payment."
+msgstr "Очікування оплати через LiqPay."
+
+msgid "LiqPay payment confirmed."
+msgstr "Оплату LiqPay підтверджено."
+
+msgid "LiqPay payment failed."
+msgstr "Помилка оплати LiqPay."
+
+msgid "Awaiting Monobank payment."
+msgstr "Очікування оплати через Monobank."
+
+msgid "Monobank payment confirmed."
+msgstr "Оплату Monobank підтверджено."
+
+msgid "Monobank payment failed."
+msgstr "Помилка оплати Monobank."
+
+# Shipping methods
+msgid "Nova Poshta \xe2\x80\x94 Branch Pickup"
+msgstr "Нова Пошта \xe2\x80\x94 самовивіз з відділення"
+
+msgid "Nova Poshta \xe2\x80\x94 Courier Delivery"
+msgstr "Нова Пошта \xe2\x80\x94 кур'єрська доставка"
+
+msgid "Ukrposhta \xe2\x80\x94 Branch Pickup"
+msgstr "Укрпошта \xe2\x80\x94 самовивіз з відділення"
+
+msgid "Ukrposhta \xe2\x80\x94 Home Delivery"
+msgstr "Укрпошта \xe2\x80\x94 доставка додому"
+
+# Nova Poshta checkout fields
+msgid "City"
+msgstr "Місто"
+
+msgid "Start typing your city\xe2\x80\xa6"
+msgstr "Почніть вводити назву міста\xe2\x80\xa6"
+
+msgid "Branch"
+msgstr "Відділення"
+
+msgid "Select city first"
+msgstr "Спочатку виберіть місто"
+
+msgid "Select city first\xe2\x80\xa6"
+msgstr "Спочатку виберіть місто\xe2\x80\xa6"
+
+msgid "Street & Building"
+msgstr "Вулиця та будинок"
+
+msgid "Street, building number"
+msgstr "Вулиця, номер будинку"
+
+# Trust counters
+msgid "Customers Served"
+msgstr "Задоволених клієнтів"
+
+msgid "Orders Shipped"
+msgstr "Відправлених замовлень"
+
+msgid "Years of Experience"
+msgstr "Років досвіду"
