@@ -213,7 +213,7 @@
     <div class="container">
       <h2 class="section-title text-center">
         <?php esc_html_e( 'Follow us on Instagram', 'solmaram' ); ?>
-        <a href="https://instagram.com/solmaram" target="_blank" rel="noopener" class="instagram-handle">@solmaram</a>
+        <a href="https://instagram.com/solmaram_ukraine" target="_blank" rel="noopener" class="instagram-handle">@solmaram_ukraine</a>
       </h2>
       <div class="instagram-grid">
         <?php foreach ( $photos as $photo ) : ?>
