@@ -57,20 +57,6 @@
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 
-  /* ── Reviews carousel auto-scroll ──────────────────────────────── */
-  const carousel = document.querySelector('.reviews-carousel[data-autoplay]');
-  if (carousel) {
-    let idx = 0;
-    const cards = carousel.querySelectorAll('.review-card');
-    if (cards.length > 1) {
-      setInterval(() => {
-        idx = (idx + 1) % cards.length;
-        // Scroll only within the carousel track — never touch window scroll position.
-        const cardLeft = cards[idx].offsetLeft;
-        carousel.scrollTo({ left: cardLeft, behavior: 'smooth' });
-      }, 4000);
-    }
-  }
 
   /* ── Two-step checkout ──────────────────────────────────────────── */
   document.querySelectorAll('.js-checkout-step-btn').forEach(btn => {
