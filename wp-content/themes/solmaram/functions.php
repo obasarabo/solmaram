@@ -143,6 +143,22 @@ add_filter( 'body_class', function ( $classes ) {
     return $classes;
 } );
 
+/* ── Polylang: register Customizer strings for per-language translation ────── */
+add_action( 'init', function () {
+    if ( ! function_exists( 'pll_register_string' ) ) return;
+    $group = 'SolMaram';
+    pll_register_string( 'sm_hero_tagline',   get_theme_mod( 'sm_hero_tagline',   '' ), $group );
+    pll_register_string( 'sm_hero_cta_label', get_theme_mod( 'sm_hero_cta_label', '' ), $group );
+    pll_register_string( 'sm_about_text',     get_theme_mod( 'sm_about_text',     '' ), $group );
+} );
+
+/* ── Polylang: make product_cat and sm_use_case taxonomy terms translatable ── */
+add_filter( 'pll_get_taxonomies', function ( array $taxonomies ): array {
+    $taxonomies['product_cat'] = 'product_cat';
+    $taxonomies['sm_use_case'] = 'sm_use_case';
+    return $taxonomies;
+} );
+
 /* ── Polylang: translate WooCommerce page IDs per language (FR-03/04) ─ */
 // Without Polylang for WooCommerce, WC options always store the default-language
 // page IDs. Filter each option so WC recognises the translated pages (e.g. the

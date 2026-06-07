@@ -1,0 +1,482 @@
+# Portuguese (pt_PT) translation for SolMaram theme
+# Copyright (C) 2024 SolMaram
+# Text Domain: solmaram
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: SolMaram 1.0.0\n"
+"PO-Revision-Date: 2026-06-06 00:00+0000\n"
+"Language: pt_PT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Header
+msgid "Skip to content"
+msgstr "Saltar para o conteúdo"
+
+msgid "Primary"
+msgstr "Principal"
+
+msgid "Select language"
+msgstr "Selecionar idioma"
+
+msgid "Languages"
+msgstr "Idiomas"
+
+msgid "Search"
+msgstr "Pesquisar"
+
+msgid "My Account"
+msgstr "Minha conta"
+
+msgid "Cart"
+msgstr "Carrinho"
+
+msgid "Menu"
+msgstr "Menu"
+
+# Mini-cart
+msgid "Your Cart"
+msgstr "O seu carrinho"
+
+msgid "Close cart"
+msgstr "Fechar carrinho"
+
+msgid "Shopping cart"
+msgstr "Carrinho de compras"
+
+msgid "View Cart"
+msgstr "Ver carrinho"
+
+msgid "Checkout"
+msgstr "Finalizar compra"
+
+msgid "Your cart is empty."
+msgstr "O seu carrinho está vazio."
+
+msgid "Remove this item"
+msgstr "Remover este item"
+
+msgid "Subtotal"
+msgstr "Subtotal"
+
+# Footer
+msgid "Pure Nature, Maximum Nutrition"
+msgstr "Natureza pura, nutrição máxima"
+
+msgid "Footer – Company"
+msgstr "Rodapé – Empresa"
+
+msgid "Footer – Shop"
+msgstr "Rodapé – Loja"
+
+msgid "Company"
+msgstr "Empresa"
+
+msgid "Shop"
+msgstr "Loja"
+
+msgid "Contact"
+msgstr "Contacto"
+
+msgid "© %1$s %2$s. All rights reserved."
+msgstr "© %1$s %2$s. Todos os direitos reservados."
+
+msgid "We accept:"
+msgstr "Aceitamos:"
+
+msgid "Visa · Mastercard · LiqPay · Monobank · Cash on delivery"
+msgstr "Visa · Mastercard · LiqPay · Monobank · Pagamento na entrega"
+
+# Homepage — hero
+msgid "Shop Now"
+msgstr "Comprar agora"
+
+# Homepage — values
+msgid "100% Natural"
+msgstr "100% Natural"
+
+msgid "Rich in Vitamins"
+msgstr "Rico em vitaminas"
+
+msgid "No Preservatives"
+msgstr "Sem conservantes"
+
+msgid "Long Shelf Life"
+msgstr "Longa validade"
+
+# Homepage — best sellers
+msgid "Best Sellers"
+msgstr "Mais vendidos"
+
+msgid "Our most loved products"
+msgstr "Os nossos produtos favoritos"
+
+msgid "View All Products"
+msgstr "Ver todos os produtos"
+
+# Homepage — freeze-drying teaser
+msgid "What is Freeze-Drying?"
+msgstr "O que é a liofilização?"
+
+msgid "Freeze-drying removes moisture while keeping up to 97% of nutrients intact, giving our products an incredible shelf life of up to 25 years — with no refrigeration needed."
+msgstr "A liofilização remove a humidade preservando até 97% dos nutrientes, conferindo aos nossos produtos uma validade incrível de até 25 anos — sem necessidade de refrigeração."
+
+msgid "Learn More"
+msgstr "Saber mais"
+
+# Homepage — about
+msgid "About SolMaram"
+msgstr "Sobre SolMaram"
+
+# Homepage — reviews
+msgid "What Our Customers Say"
+msgstr "O que dizem os nossos clientes"
+
+msgid "%d out of 5 stars"
+msgstr "%d de 5 estrelas"
+
+# Homepage — blog
+msgid "Blog & Recipes"
+msgstr "Blog e receitas"
+
+msgid "All Posts"
+msgstr "Todos os artigos"
+
+# Homepage — Instagram
+msgid "Follow us on Instagram"
+msgstr "Siga-nos no Instagram"
+
+# Sublimation page
+msgid "What is Freeze-Drying (Sublimation)?"
+msgstr "O que é a liofilização (sublimação)?"
+
+msgid "How we preserve 100% of nature's goodness"
+msgstr "Como preservamos 100% da bondade da natureza"
+
+msgid "Freeze-Drying vs Other Methods"
+msgstr "Liofilização vs outros métodos"
+
+msgid "Criteria"
+msgstr "Critério"
+
+msgid "Freeze-Drying"
+msgstr "Liofilização"
+
+msgid "Freezing"
+msgstr "Congelação"
+
+msgid "Conventional Drying"
+msgstr "Secagem convencional"
+
+msgid "Nutrients retained"
+msgstr "Nutrientes preservados"
+
+msgid "Up to 97%"
+msgstr "Até 97%"
+
+msgid "~60–80%"
+msgstr "~60–80%"
+
+msgid "~20–40%"
+msgstr "~20–40%"
+
+msgid "Shelf life"
+msgstr "Prazo de validade"
+
+msgid "Up to 25 years"
+msgstr "Até 25 anos"
+
+msgid "Up to 1 year"
+msgstr "Até 1 ano"
+
+msgid "1–3 years"
+msgstr "1–3 anos"
+
+msgid "Requires refrigeration"
+msgstr "Requer refrigeração"
+
+msgid "No"
+msgstr "Não"
+
+msgid "Yes"
+msgstr "Sim"
+
+msgid "Original texture"
+msgstr "Textura original"
+
+msgid "Preserved"
+msgstr "Preservada"
+
+msgid "Changes"
+msgstr "Altera-se"
+
+msgid "Significantly changes"
+msgstr "Altera-se significativamente"
+
+msgid "Weight"
+msgstr "Peso"
+
+msgid "Very light"
+msgstr "Muito leve"
+
+msgid "Heavy"
+msgstr "Pesado"
+
+msgid "Light"
+msgstr "Leve"
+
+msgid "Drying method comparison"
+msgstr "Comparação de métodos de secagem"
+
+msgid "How We Make It"
+msgstr "Como produzimos"
+
+msgid "Our freeze-drying process is carried out in a controlled, clean environment — from harvest to packaging — preserving every nutrient and flavour molecule."
+msgstr "O nosso processo de liofilização é realizado num ambiente controlado e limpo — da colheita à embalagem — preservando cada nutriente e molécula de sabor."
+
+msgid "Quality Certificates"
+msgstr "Certificados de qualidade"
+
+msgid "Explore Our Products"
+msgstr "Explore os nossos produtos"
+
+# Shop / catalogue
+msgid "Filter"
+msgstr "Filtrar"
+
+msgid "Category"
+msgstr "Categoria"
+
+msgid "Use Case"
+msgstr "Utilização"
+
+msgid "Snack"
+msgstr "Snack"
+
+msgid "Cooking"
+msgstr "Culinária"
+
+msgid "Ready Meal"
+msgstr "Refeição pronta"
+
+msgid "Price"
+msgstr "Preço"
+
+msgid "Min price"
+msgstr "Preço mínimo"
+
+msgid "Max price"
+msgstr "Preço máximo"
+
+msgid "Any"
+msgstr "Qualquer"
+
+msgid "Sort by"
+msgstr "Ordenar por"
+
+msgid "Most popular"
+msgstr "Mais populares"
+
+msgid "Newest"
+msgstr "Novidades"
+
+msgid "Price: low to high"
+msgstr "Preço: do mais baixo ao mais alto"
+
+msgid "Price: high to low"
+msgstr "Preço: do mais alto ao mais baixo"
+
+msgid "No products found."
+msgstr "Nenhum produto encontrado."
+
+# Checkout
+msgid "Contact & Delivery"
+msgstr "Contacto e entrega"
+
+msgid "Payment"
+msgstr "Pagamento"
+
+msgid "Already have an account? <a href=\"%s\">Log in</a>"
+msgstr "Já tem conta? <a href=\"%s\">Iniciar sessão</a>"
+
+msgid "Contact Details"
+msgstr "Dados de contacto"
+
+msgid "Delivery"
+msgstr "Entrega"
+
+msgid "Estimated delivery: 1–3 business days via Nova Poshta"
+msgstr "Entrega estimada: 1–3 dias úteis via Nova Poshta"
+
+msgid "Order Comment (optional)"
+msgstr "Comentário ao pedido (opcional)"
+
+msgid "Notes about your order, e.g. special delivery instructions"
+msgstr "Notas sobre o seu pedido, ex.: instruções especiais de entrega"
+
+msgid "Continue to Payment"
+msgstr "Continuar para pagamento"
+
+msgid "Payment Method"
+msgstr "Método de pagamento"
+
+msgid "Order Summary"
+msgstr "Resumo do pedido"
+
+# My account
+msgid "Dashboard"
+msgstr "Painel"
+
+msgid "Order History"
+msgstr "Histórico de pedidos"
+
+msgid "Saved Addresses"
+msgstr "Endereços guardados"
+
+msgid "Profile Settings"
+msgstr "Configurações de perfil"
+
+msgid "Log Out"
+msgstr "Terminar sessão"
+
+# Search
+msgid "Search results for: %s"
+msgstr "Resultados de pesquisa: %s"
+
+msgid "Search again…"
+msgstr "Pesquisar novamente…"
+
+msgid "Products"
+msgstr "Produtos"
+
+msgid "Articles & Recipes"
+msgstr "Artigos e receitas"
+
+msgid "Nothing matched your search. Try different keywords, or browse our popular products:"
+msgstr "Nenhum resultado encontrado. Tente outras palavras-chave ou explore os nossos produtos populares:"
+
+# 404
+msgid "Page not found"
+msgstr "Página não encontrada"
+
+msgid "The page you're looking for doesn't exist. Try our popular products:"
+msgstr "A página que procura não existe. Explore os nossos produtos populares:"
+
+msgid "Back to Home"
+msgstr "Voltar ao início"
+
+# Recipes / blog
+msgid "Prep time"
+msgstr "Tempo de preparação"
+
+msgid "Servings"
+msgstr "Porções"
+
+msgid "Ingredients"
+msgstr "Ingredientes"
+
+msgid "Steps"
+msgstr "Passos"
+
+msgid "Used in This Recipe"
+msgstr "Usado nesta receita"
+
+msgid "Related Articles"
+msgstr "Artigos relacionados"
+
+# Product page
+msgid "Ideal for"
+msgstr "Ideal para"
+
+msgid "Product Description"
+msgstr "Descrição do produto"
+
+msgid "Out of stock"
+msgstr "Esgotado"
+
+# Shipping bar
+msgid "Add %s more to get free shipping"
+msgstr "Adicione mais %s para obter envio gratuito"
+
+msgid "🎉 You have free shipping!"
+msgstr "🎉 Tem envio gratuito!"
+
+# Payment / order statuses
+msgid "Order #%d — SolMaram"
+msgstr "Pedido #%d — SolMaram"
+
+msgid "Awaiting LiqPay payment."
+msgstr "A aguardar pagamento LiqPay."
+
+msgid "LiqPay payment confirmed."
+msgstr "Pagamento LiqPay confirmado."
+
+msgid "LiqPay payment failed."
+msgstr "Falha no pagamento LiqPay."
+
+msgid "Awaiting Monobank payment."
+msgstr "A aguardar pagamento Monobank."
+
+msgid "Monobank payment confirmed."
+msgstr "Pagamento Monobank confirmado."
+
+msgid "Monobank payment failed."
+msgstr "Falha no pagamento Monobank."
+
+# Shipping methods
+msgid "Nova Poshta — Branch Pickup"
+msgstr "Nova Poshta — Levantamento na loja"
+
+msgid "Nova Poshta — Courier Delivery"
+msgstr "Nova Poshta — Entrega ao domicílio"
+
+msgid "Ukrposhta — Branch Pickup"
+msgstr "Ukrposhta — Levantamento na loja"
+
+msgid "Ukrposhta — Home Delivery"
+msgstr "Ukrposhta — Entrega ao domicílio"
+
+# Nova Poshta checkout fields
+msgid "City"
+msgstr "Cidade"
+
+msgid "Start typing your city…"
+msgstr "Comece a escrever a sua cidade…"
+
+msgid "Branch"
+msgstr "Agência"
+
+msgid "Select city first"
+msgstr "Selecione primeiro a cidade"
+
+msgid "Select city first…"
+msgstr "Selecione primeiro a cidade…"
+
+msgid "Street & Building"
+msgstr "Rua e número"
+
+msgid "Street, building number"
+msgstr "Rua, número do edifício"
+
+# Trust counters
+msgid "Customers Served"
+msgstr "Clientes satisfeitos"
+
+msgid "Orders Shipped"
+msgstr "Pedidos enviados"
+
+msgid "Years of Experience"
+msgstr "Anos de experiência"
+
+# Inventory / order status
+msgid "Shipped"
+msgstr "Enviado"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Lang"
+msgstr "Idioma"

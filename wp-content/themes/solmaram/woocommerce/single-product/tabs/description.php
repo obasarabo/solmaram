@@ -18,16 +18,15 @@ $heading = apply_filters( 'woocommerce_product_description_heading', __( 'Produc
 
   <?php
   // Use cases block (FR-01.2)
-  $use_cases = wp_get_post_terms( $product->get_id(), 'product_tag', [ 'fields' => 'names' ] );
-  if ( is_wp_error( $use_cases ) ) $use_cases = [];
-  $relevant  = array_intersect( $use_cases, [ 'Snack', 'Cooking', 'Ready Meal' ] );
+  $relevant = wp_get_post_terms( $product->get_id(), 'sm_use_case' );
+  if ( is_wp_error( $relevant ) ) $relevant = [];
   if ( ! empty( $relevant ) ) :
   ?>
   <div class="product-use-cases">
     <h3><?php esc_html_e( 'Ideal for', 'solmaram' ); ?></h3>
     <ul>
       <?php foreach ( $relevant as $use ) : ?>
-        <li><?php echo esc_html( $use ); ?></li>
+        <li><?php echo esc_html( $use->name ); ?></li>
       <?php endforeach; ?>
     </ul>
   </div>

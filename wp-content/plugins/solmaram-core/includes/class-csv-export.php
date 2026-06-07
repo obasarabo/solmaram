@@ -79,6 +79,9 @@ class SM_CSV_Export {
 
         $orders = wc_get_orders( $args );
 
+        if ( ob_get_level() ) ob_end_clean();
+        set_time_limit(0);
+        wp_raise_memory_limit('admin');
         header( 'Content-Type: text/csv; charset=UTF-8' );
         header( 'Content-Disposition: attachment; filename=solmaram-orders-' . gmdate( 'Y-m-d' ) . '.csv' );
         header( 'Pragma: no-cache' );
@@ -91,6 +94,7 @@ class SM_CSV_Export {
             __( 'Order #', 'solmaram' ),
             __( 'Date', 'solmaram' ),
             __( 'Status', 'solmaram' ),
+            __( 'Language', 'solmaram' ),
             __( 'Customer', 'solmaram' ),
             __( 'Email', 'solmaram' ),
             __( 'Phone', 'solmaram' ),
@@ -114,6 +118,7 @@ class SM_CSV_Export {
                 $order->get_id(),
                 $order->get_date_created()?->date( 'Y-m-d H:i' ),
                 wc_get_order_status_name( $order->get_status() ),
+                strtoupper( $order->get_meta( '_sm_order_lang' ) ?: 'UK' ),
                 $order->get_formatted_billing_full_name(),
                 $order->get_billing_email(),
                 $order->get_billing_phone(),

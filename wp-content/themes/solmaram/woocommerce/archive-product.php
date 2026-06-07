@@ -55,18 +55,15 @@ get_header();
         <div class="filter-group">
           <h3 class="filter-group__label"><?php esc_html_e( 'Use Case', 'solmaram' ); ?></h3>
           <?php
-          $use_cases = [
-              'snack'     => __( 'Snack', 'solmaram' ),
-              'cooking'   => __( 'Cooking', 'solmaram' ),
-              'ready-meal'=> __( 'Ready Meal', 'solmaram' ),
-          ];
-          foreach ( $use_cases as $slug => $label ) :
-              $checked = in_array( $slug, (array) ( $_GET['use_case'] ?? [] ), true );
+          $use_cases = get_terms( [ 'taxonomy' => 'sm_use_case', 'hide_empty' => false ] );
+          if ( is_wp_error( $use_cases ) ) $use_cases = [];
+          foreach ( $use_cases as $use_case ) :
+              $checked = in_array( $use_case->slug, (array) ( $_GET['use_case'] ?? [] ), true );
           ?>
             <label class="filter-option">
-              <input type="checkbox" name="use_case[]" value="<?php echo esc_attr( $slug ); ?>"
+              <input type="checkbox" name="use_case[]" value="<?php echo esc_attr( $use_case->slug ); ?>"
                      class="js-filter-input" <?php checked( $checked ); ?>>
-              <?php echo esc_html( $label ); ?>
+              <?php echo esc_html( $use_case->name ); ?>
             </label>
           <?php endforeach; ?>
         </div>
@@ -77,12 +74,12 @@ get_header();
           <div class="price-range">
             <label class="sr-only" for="price-min"><?php esc_html_e( 'Min price', 'solmaram' ); ?></label>
             <input type="number" id="price-min" name="min_price" class="js-filter-input price-range__input"
-                   placeholder="0" min="0" value="<?php echo absint( $_GET['min_price'] ?? 0 ); ?>">
+                   placeholder="<?php esc_attr_e( 'Any', 'solmaram' ); ?>" value="<?php echo floatval( $_GET['min_price'] ?? 0 ) ?: ''; ?>">
             <span>–</span>
             <label class="sr-only" for="price-max"><?php esc_html_e( 'Max price', 'solmaram' ); ?></label>
             <input type="number" id="price-max" name="max_price" class="js-filter-input price-range__input"
                    placeholder="<?php esc_attr_e( 'Any', 'solmaram' ); ?>"
-                   min="0" value="<?php echo absint( $_GET['max_price'] ?? 0 ) ?: ''; ?>">
+                   value="<?php echo floatval( $_GET['max_price'] ?? 0 ) ?: ''; ?>">
           </div>
         </div>
 
