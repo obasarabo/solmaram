@@ -1,6 +1,29 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
+/* ── Disable array-format filter params in main query (AJAX handles them) ──── */
+// When ?product_cat[]=slug&use_case[]=slug arrive, WordPress sees product_cat
+// as a recognized tax query var and tries to parse it, but it's an array which
+// causes urlencode() to fail. Remove these from query_vars so they never reach
+// parse_tax_query(). The client-side AJAX filter handles them instead.
+add_filter( 'query_vars', function ( $vars ) {
+    // Don't remove product_cat / use_case entirely (they can be string queries).
+    // Just make sure they don't get parsed as arrays by using a special marker.
+    return $vars;
+} );
+
+add_action( 'parse_request', function ( &$wp ) {
+    // Convert array params to empty string so WP doesn't try to process them
+    if ( isset( $_GET['product_cat'] ) && is_array( $_GET['product_cat'] ) ) {
+        $_GET['product_cat'] = '';
+        $wp->query_vars['product_cat'] = '';
+    }
+    if ( isset( $_GET['use_case'] ) && is_array( $_GET['use_case'] ) ) {
+        $_GET['use_case'] = '';
+        $wp->query_vars['use_case'] = '';
+    }
+}, 1 );
+
 /* ── Theme setup ───────────────────────────────────────────────────── */
 add_action( 'after_setup_theme', function () {
     load_theme_textdomain( 'solmaram', get_template_directory() . '/languages' );
@@ -272,6 +295,12 @@ add_filter( 'pll_get_post_types', function ( $post_types ) {
     unset( $post_types['product'] );
     return $post_types;
 } );
+
+// 1.5. Strip array-format filter params from $_GET before WordPress parses them.
+//      These are client-side AJAX params (product_cat[], use_case[]) that cause
+//      WordPress parse_tax_query() to fail. On page load, let the AJAX JS auto-trigger
+//      do the filtering, not the main WP query.
+
 
 // 2. Convert the translated shop page query to a product archive at priority 1,
 //    before Polylang (priority 2) can add any language filter.

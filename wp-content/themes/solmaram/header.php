@@ -58,30 +58,6 @@
               }
           }
 
-          // Preserve active filter params when switching language on the shop.
-          if ( function_exists( 'is_shop' ) && ( is_shop() || is_product_category() ) ) {
-              $filter_keys = [ 'product_cat', 'use_case', 'min_price', 'max_price', 'orderby' ];
-              $filter_qs   = [];
-              foreach ( $filter_keys as $key ) {
-                  // phpcs:ignore WordPress.Security.NonceVerification
-                  if ( isset( $_GET[ $key ] ) && $_GET[ $key ] !== '' ) {
-                      $filter_qs[ $key ] = $_GET[ $key ];
-                  }
-                  // array form: product_cat[] / use_case[]
-                  $arr_key = $key . '[]';
-                  if ( isset( $_GET[ $arr_key ] ) ) {
-                      $filter_qs[ $arr_key ] = $_GET[ $arr_key ];
-                  }
-              }
-              if ( $filter_qs ) {
-                  foreach ( $languages as $slug => $lang ) {
-                      $languages[ $slug ]['url'] = add_query_arg(
-                          array_map( 'sanitize_text_field', $filter_qs ),
-                          $languages[ $slug ]['url']
-                      );
-                  }
-              }
-          }
           if ( count( $languages ) > 1 ) :
       ?>
       <div class="lang-switcher" id="lang-switcher">
