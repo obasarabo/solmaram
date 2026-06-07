@@ -86,6 +86,13 @@
     doFilter(1);
   });
 
+  // Auto-apply pre-checked filters on page load (e.g. arriving from a category link)
+  $(function () {
+    if ( $('.js-filter-input:checked').length > 0 ) {
+      doFilter(1);
+    }
+  });
+
   // Pagination inside AJAX area
   $(document).on('click', '#shop-pagination a', function (e) {
     e.preventDefault();

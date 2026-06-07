@@ -102,12 +102,14 @@ get_header();
       <h2><?php esc_html_e( 'Explore Our Products', 'solmaram' ); ?></h2>
       <div class="grid-2" style="margin-top:20px; gap:16px">
         <?php
-        $cats = get_terms( [ 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true ] );
+        $cats = get_terms( [ 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true, 'lang' => '' ] );
         if ( is_wp_error( $cats ) ) $cats = [];
+        $shop_url = wc_get_page_permalink( 'shop' );
         foreach ( $cats as $cat ) :
             if ( $cat->slug === 'uncategorized' ) continue;
+            $url = add_query_arg( 'product_cat', $cat->slug, $shop_url );
         ?>
-          <a href="<?php echo esc_url( get_term_link( $cat ) ); ?>" class="btn btn-outline">
+          <a href="<?php echo esc_url( $url ); ?>" class="btn btn-outline">
             <?php echo esc_html( $cat->name ); ?>
           </a>
         <?php endforeach; ?>
