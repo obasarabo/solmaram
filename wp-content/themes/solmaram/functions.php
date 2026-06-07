@@ -1,6 +1,37 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
+/* ── Polylang language for WooCommerce Store API REST requests ──────────────── */
+// Block checkout fetches cart/shipping from /wp-json/wc/store/v1/ (no language
+// prefix). Polylang defaults to UA, so product names and shipping labels come
+// back Ukrainian even on EN/PT checkout. We read HTTP_REFERER to detect the
+// correct language and push it into Polylang before request processing.
+
+function sm_rest_lang_from_referer( ?string $detected ): ?string {
+    $referer = $_SERVER['HTTP_REFERER'] ?? '';
+    if ( ! $referer || ! function_exists( 'pll_languages_list' ) ) return $detected;
+    foreach ( pll_languages_list( [ 'fields' => 'slug' ] ) as $slug ) {
+        if ( $slug !== pll_default_language() && str_contains( $referer, '/' . $slug . '/' ) ) {
+            return $slug;
+        }
+    }
+    return $detected;
+}
+
+// Polylang 3.x filter (preferred)
+add_filter( 'pll_rest_current_language', 'sm_rest_lang_from_referer' );
+
+// Fallback: directly set PLL()->curlang at rest_api_init priority 0
+add_action( 'rest_api_init', function () {
+    $slug = sm_rest_lang_from_referer( null );
+    if ( ! $slug || ! function_exists( 'PLL' ) ) return;
+    try {
+        $pll  = PLL();
+        $lang = $pll->model->get_language( $slug );
+        if ( $lang ) $pll->curlang = $lang;
+    } catch ( \Exception $e ) {}
+}, 0 );
+
 /* ── Auto-tag new product reviews with current Polylang language ────────────── */
 // Without this, reviews submitted via the WooCommerce form lack _sm_review_lang
 // and are invisible to the homepage carousel meta_query filter.
