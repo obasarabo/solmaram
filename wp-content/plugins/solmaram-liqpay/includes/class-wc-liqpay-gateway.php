@@ -74,8 +74,8 @@ class WC_SM_LiqPay_Gateway extends WC_Payment_Gateway {
     }
 
     public function handle_callback() {
-        $data      = sanitize_text_field( $_POST['data'] ?? '' );
-        $signature = sanitize_text_field( $_POST['signature'] ?? '' );
+        $data      = wp_unslash( $_POST['data'] ?? '' );
+        $signature = wp_unslash( $_POST['signature'] ?? '' );
 
         if ( ! $data || ! $signature ) {
             status_header( 400 );

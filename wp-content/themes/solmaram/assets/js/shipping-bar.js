@@ -4,7 +4,7 @@
 
   function updateBar(subtotal) {
     const $bar = $('.sm-shipping-bar');
-    if (!$bar.length || !smShippingBar) return;
+    if (!$bar.length || typeof smShippingBar === 'undefined') return;
     const threshold = parseFloat(smShippingBar.threshold) || 500;
     const current   = parseFloat(subtotal)               || 0;
     const pct       = Math.min(100, (current / threshold) * 100);

@@ -143,6 +143,63 @@ add_filter( 'body_class', function ( $classes ) {
     return $classes;
 } );
 
+/* ── Polylang: translate taxonomy term names for non-default languages ─────── */
+// Products are language-agnostic so category/use-case terms exist only in UA.
+// This filter translates their display names when a different language is active.
+add_filter( 'get_term', function ( $term ) {
+    if ( ! $term instanceof WP_Term ) return $term;
+    if ( ! function_exists( 'pll_current_language' ) || ! function_exists( 'pll_default_language' ) ) return $term;
+
+    $lang = pll_current_language();
+    if ( ! $lang || $lang === pll_default_language() ) return $term;
+
+    $translations = [
+        'product_cat' => [
+            'freeze-dried-fruits-berries' => [
+                'en' => 'Freeze-dried Fruits & Berries',
+                'pt' => 'Frutas e bagas liofilizadas',
+            ],
+            'freeze-dried-vegetables' => [
+                'en' => 'Freeze-dried Vegetables',
+                'pt' => 'Vegetais liofilizados',
+            ],
+        ],
+        'sm_use_case' => [
+            'snack'      => [ 'en' => 'Snack',        'pt' => 'Snack' ],
+            'cooking'    => [ 'en' => 'Cooking',      'pt' => 'Culinária' ],
+            'ready-meal' => [ 'en' => 'Ready Meal',   'pt' => 'Refeição pronta' ],
+        ],
+    ];
+
+    if ( isset( $translations[ $term->taxonomy ][ $term->slug ][ $lang ] ) ) {
+        $term = clone $term;
+        $term->name = $translations[ $term->taxonomy ][ $term->slug ][ $lang ];
+    }
+
+    return $term;
+} );
+
+/* ── Polylang: enforce per-language nav menus (overrides stored option) ──── */
+// Runs after Polylang's own wp_nav_menu_args filter (priority 10) so it wins.
+add_filter( 'wp_nav_menu_args', function ( array $args ): array {
+    if ( ! function_exists( 'pll_current_language' ) ) return $args;
+
+    $lang = pll_current_language();
+    $location = $args['theme_location'] ?? '';
+
+    $menu_map = [
+        'ua' => [ 'primary' => 55, 'footer-1' => 57, 'footer-2' => 58 ],
+        'en' => [ 'primary' => 35, 'footer-1' => 59, 'footer-2' => 60 ],
+        'pt' => [ 'primary' => 35, 'footer-1' => 67, 'footer-2' => 68 ],
+    ];
+
+    if ( $location && isset( $menu_map[ $lang ][ $location ] ) ) {
+        $args['menu'] = $menu_map[ $lang ][ $location ];
+    }
+
+    return $args;
+}, 20 );
+
 /* ── Polylang: register Customizer strings for per-language translation ────── */
 add_action( 'init', function () {
     if ( ! function_exists( 'pll_register_string' ) ) return;

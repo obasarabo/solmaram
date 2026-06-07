@@ -24,6 +24,7 @@ get_header();
               'hide_empty' => true,
               'parent'     => 0,
               'exclude'    => [ get_option( 'default_product_cat' ) ],
+              'lang'       => '',
           ] );
           if ( is_wp_error( $categories ) ) $categories = [];
           foreach ( $categories as $cat ) :
@@ -37,7 +38,7 @@ get_header();
             </label>
             <?php
             // Subcategories
-            $subcats = get_terms( [ 'taxonomy' => 'product_cat', 'hide_empty' => true, 'parent' => $cat->term_id ] );
+            $subcats = get_terms( [ 'taxonomy' => 'product_cat', 'hide_empty' => true, 'parent' => $cat->term_id, 'lang' => '' ] );
             if ( is_wp_error( $subcats ) ) $subcats = [];
             foreach ( $subcats as $sub ) :
                 $sub_checked = in_array( $sub->slug, (array) ( $_GET['product_cat'] ?? [] ), true );
@@ -55,7 +56,7 @@ get_header();
         <div class="filter-group">
           <h3 class="filter-group__label"><?php esc_html_e( 'Use Case', 'solmaram' ); ?></h3>
           <?php
-          $use_cases = get_terms( [ 'taxonomy' => 'sm_use_case', 'hide_empty' => false ] );
+          $use_cases = get_terms( [ 'taxonomy' => 'sm_use_case', 'hide_empty' => false, 'lang' => '' ] );
           if ( is_wp_error( $use_cases ) ) $use_cases = [];
           foreach ( $use_cases as $use_case ) :
               $checked = in_array( $use_case->slug, (array) ( $_GET['use_case'] ?? [] ), true );

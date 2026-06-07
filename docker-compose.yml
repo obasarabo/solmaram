@@ -73,7 +73,7 @@ services:
       - wp_core:/var/www/html
       - ./wp-content:/var/www/html/wp-content
       - wp_uploads:/var/www/html/wp-content/uploads
-    user: "33:33"
+    user: "0:0"
 
 volumes:
   db_data:

@@ -23,9 +23,9 @@ class SM_NP_Address_Saver {
         if ( ! $has_np ) return;
 
         // Save branch or courier address to customer meta
-        $branch_ref      = sanitize_text_field( $posted_data['np_branch_ref'] ?? '' );
-        $courier_address = sanitize_text_field( $posted_data['np_courier_address'] ?? '' );
-        $city            = sanitize_text_field( $posted_data['billing_city'] ?? '' );
+        $branch_ref      = sanitize_text_field( wp_unslash( $_POST['np_branch_ref'] ?? '' ) );
+        $courier_address = sanitize_text_field( wp_unslash( $_POST['np_courier_address'] ?? '' ) );
+        $city            = sanitize_text_field( wp_unslash( $_POST['billing_city'] ?? $posted_data['billing_city'] ?? '' ) );
 
         if ( $branch_ref ) {
             $np_addresses   = get_user_meta( $customer_id, '_np_saved_addresses', true );

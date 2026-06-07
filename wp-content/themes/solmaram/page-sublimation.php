@@ -12,7 +12,7 @@ get_header();
   <div class="container" style="padding-block:64px; max-width:900px">
 
     <h1 class="section-title"><?php esc_html_e( 'What is Freeze-Drying (Sublimation)?', 'solmaram' ); ?></h1>
-    <p class="section-subtitle"><?php esc_html_e( 'How we preserve 100% of nature's goodness', 'solmaram' ); ?></p>
+    <p class="section-subtitle"><?php esc_html_e( "How we preserve 100% of nature's goodness", 'solmaram' ); ?></p>
 
     <?php the_content(); ?>
 

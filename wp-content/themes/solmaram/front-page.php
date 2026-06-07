@@ -25,15 +25,20 @@
       <ul class="values-grid">
         <?php
         $values = [
-            [ 'icon' => '🌿', 'label' => __( '100% Natural', 'solmaram' ) ],
-            [ 'icon' => '💊', 'label' => __( 'Rich in Vitamins', 'solmaram' ) ],
-            [ 'icon' => '🚫', 'label' => __( 'No Preservatives', 'solmaram' ) ],
-            [ 'icon' => '📅', 'label' => __( 'Long Shelf Life', 'solmaram' ) ],
+            [ 'img_id' => 136, 'label' => __( '100% Natural',      'solmaram' ) ],
+            [ 'img_id' => 137, 'label' => __( 'Rich in Vitamins',  'solmaram' ) ],
+            [ 'img_id' => 138, 'label' => __( 'No Preservatives',  'solmaram' ) ],
+            [ 'img_id' => 139, 'label' => __( 'Long Shelf Life',   'solmaram' ) ],
         ];
         foreach ( $values as $v ) :
+            $icon_url = wp_get_attachment_image_url( $v['img_id'], 'thumbnail' );
         ?>
           <li class="value-item">
-            <span class="value-item__icon" aria-hidden="true"><?php echo $v['icon']; ?></span>
+            <?php if ( $icon_url ) : ?>
+              <img src="<?php echo esc_url( $icon_url ); ?>"
+                   alt="" aria-hidden="true"
+                   class="value-item__icon-img" loading="lazy">
+            <?php endif; ?>
             <span class="value-item__label"><?php echo esc_html( $v['label'] ); ?></span>
           </li>
         <?php endforeach; ?>

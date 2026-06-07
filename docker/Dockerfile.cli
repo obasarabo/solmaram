@@ -1,4 +1,4 @@
-FROM wordpress:cli-php8.1
+FROM wordpress:cli-php8.3
 USER root
 RUN apk add --no-cache --virtual .build-deps autoconf g++ make \
     && pecl install redis \

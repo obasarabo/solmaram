@@ -34,6 +34,9 @@ add_action( 'plugins_loaded', function () {
 
     add_action( 'wp_ajax_np_get_warehouses',        'sm_np_ajax_get_warehouses' );
     add_action( 'wp_ajax_nopriv_np_get_warehouses', 'sm_np_ajax_get_warehouses' );
+
+    add_action( 'wp_ajax_np_set_city_ref',        'sm_np_ajax_set_city_ref' );
+    add_action( 'wp_ajax_nopriv_np_set_city_ref', 'sm_np_ajax_set_city_ref' );
 } );
 
 function sm_np_ajax_get_cities() {
@@ -46,7 +49,17 @@ function sm_np_ajax_get_cities() {
     wp_send_json_success( $cities );
 }
 
+function sm_np_ajax_set_city_ref() {
+    check_ajax_referer( 'sm_np', 'nonce' );
+    $city_ref = sanitize_text_field( wp_unslash( $_POST['city_ref'] ?? '' ) );
+    if ( $city_ref ) {
+        WC()->session->set( 'np_city_ref', $city_ref );
+    }
+    wp_send_json_success();
+}
+
 function sm_np_ajax_get_warehouses() {
+
     check_ajax_referer( 'sm_np', 'nonce' );
     $city_ref = sanitize_text_field( $_POST['city_ref'] ?? '' );
     if ( ! $city_ref ) wp_send_json_error();
