@@ -59,9 +59,25 @@ add_action( 'wp_enqueue_scripts', function () {
 
     if ( is_shop() || is_product_category() || is_product_tag() ) {
         wp_enqueue_script( 'solmaram-ajax-filters', $theme_uri . '/assets/js/ajax-filters.js', [ 'jquery' ], $ver, true );
+        // Build slug → translated name maps for filter tag labels
+        $cat_labels      = [];
+        $use_case_labels = [];
+        foreach ( get_terms( [ 'taxonomy' => 'product_cat', 'hide_empty' => false, 'lang' => '' ] ) as $t ) {
+            if ( ! is_wp_error( $t ) ) $cat_labels[ $t->slug ] = $t->name;
+        }
+        foreach ( get_terms( [ 'taxonomy' => 'sm_use_case', 'hide_empty' => false, 'lang' => '' ] ) as $t ) {
+            if ( ! is_wp_error( $t ) ) $use_case_labels[ $t->slug ] = $t->name;
+        }
+
         wp_localize_script( 'solmaram-ajax-filters', 'smFilters', [
-            'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-            'nonce'   => wp_create_nonce( 'sm_filter' ),
+            'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
+            'nonce'           => wp_create_nonce( 'sm_filter' ),
+            'catLabels'       => $cat_labels,
+            'useCaseLabels'   => $use_case_labels,
+            'labelCategory'   => __( 'Category', 'solmaram' ),
+            'labelUseCase'    => __( 'Use Case', 'solmaram' ),
+            'labelMin'        => __( 'Min price', 'solmaram' ),
+            'labelMax'        => __( 'Max price', 'solmaram' ),
         ] );
     }
 

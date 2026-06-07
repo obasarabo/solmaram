@@ -25,15 +25,27 @@
 
   function buildActiveTags(params) {
     $activeTags.empty();
-    const labels = { product_cat: 'Category', use_case: 'Use case', min_price: 'Min', max_price: 'Max' };
+    const groupLabels = {
+      product_cat: smFilters.labelCategory,
+      use_case:    smFilters.labelUseCase,
+      min_price:   smFilters.labelMin,
+      max_price:   smFilters.labelMax,
+    };
     $.each(params, function (key, val) {
       const vals = Array.isArray(val) ? val : [val];
       vals.forEach(function (v) {
         if (!v || key === 'orderby') return;
         if ((key === 'min_price' || key === 'max_price') && parseFloat(v) <= 0) return;
+        // Resolve human-readable term name for category/use-case slugs
+        let termName = v;
+        if (key === 'product_cat' && smFilters.catLabels && smFilters.catLabels[v]) {
+          termName = smFilters.catLabels[v];
+        } else if (key === 'use_case' && smFilters.useCaseLabels && smFilters.useCaseLabels[v]) {
+          termName = smFilters.useCaseLabels[v];
+        }
         $('<span class="filter-tag">')
           .attr({ 'data-key': key, 'data-val': v })
-          .text((labels[key] || key) + ': ' + v)
+          .text((groupLabels[key] || key) + ': ' + termName)
           .append('<button class="filter-tag__remove" aria-label="Remove filter">\xd7</button>')
           .appendTo($activeTags);
       });
