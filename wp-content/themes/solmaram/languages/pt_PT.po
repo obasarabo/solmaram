@@ -22,6 +22,9 @@ msgstr "Principal"
 msgid "Select language"
 msgstr "Selecionar idioma"
 
+msgid "Select currency"
+msgstr "Selecionar moeda"
+
 msgid "Languages"
 msgstr "Idiomas"
 

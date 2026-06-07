@@ -259,7 +259,7 @@ add_filter( 'wp_nav_menu_args', function ( array $args ): array {
     $menu_map = [
         'ua' => [ 'primary' => 55, 'footer-1' => 57, 'footer-2' => 58 ],
         'en' => [ 'primary' => 35, 'footer-1' => 59, 'footer-2' => 60 ],
-        'pt' => [ 'primary' => 35, 'footer-1' => 67, 'footer-2' => 68 ],
+        'pt' => [ 'primary' => 78, 'footer-1' => 67, 'footer-2' => 68 ],
     ];
 
     if ( $location && isset( $menu_map[ $lang ][ $location ] ) ) {

@@ -23,6 +23,9 @@ msgstr "Основна"
 msgid "Select language"
 msgstr "Вибрати мову"
 
+msgid "Select currency"
+msgstr "Вибрати валюту"
+
 msgid "Languages"
 msgstr "Мови"
 
