@@ -305,9 +305,29 @@
 
 /* ── About us ──────────────────────────────────────────────────────── */
 .section-about { scroll-margin-top: 80px; }
-.about__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
-.about__img { border-radius: var(--radius-lg); }
-@media (max-width: 768px) { .about__inner { grid-template-columns: 1fr; } }
+
+/* With image: 40/60 split so text has more room */
+.about__inner { display: grid; grid-template-columns: 2fr 3fr; gap: 60px; align-items: start; }
+.about__img { border-radius: var(--radius-lg); width: 100%; }
+
+/* No image: single block, text split into 2 columns to halve the height */
+.about__inner--text-only { display: block; }
+.about__inner--text-only .about__content {
+  columns: 2 340px;
+  column-gap: 48px;
+}
+/* Keep headings, lists and blockquote from splitting across columns */
+.about__inner--text-only .about__content h2,
+.about__inner--text-only .about__content h3,
+.about__inner--text-only .about__content ul,
+.about__inner--text-only .about__content blockquote { break-inside: avoid; }
+/* Force second heading to start a new column */
+.about__inner--text-only .about__content h3:nth-of-type(2) { break-before: column; }
+
+@media (max-width: 768px) {
+  .about__inner { grid-template-columns: 1fr; }
+  .about__inner--text-only .about__content { columns: 1; }
+}
 
 .about__content h3 { font-size: 1rem; font-weight: 700; margin: 1.4em 0 .5em; letter-spacing: .02em; text-transform: uppercase; color: var(--color-primary); }
 .about__content ul { list-style: none; padding: 0; margin: 0 0 1em; }

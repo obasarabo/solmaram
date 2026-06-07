@@ -107,14 +107,14 @@
 
   <?php /* ── 5. About us ──────────────────────────────────────────── */ ?>
   <section id="about" class="section section--alt section-about">
-    <div class="container about__inner">
+    <?php $about_img_id = get_theme_mod( 'sm_about_image' ); ?>
+    <div class="container about__inner<?php echo $about_img_id ? '' : ' about__inner--text-only'; ?>">
+      <?php if ( $about_img_id ) : ?>
       <div class="about__image">
-        <?php
-        $about_img_id = get_theme_mod( 'sm_about_image' );
-        if ( $about_img_id ) echo wp_get_attachment_image( $about_img_id, 'large', false, [ 'class' => 'about__img' ] );
-        ?>
+        <?php echo wp_get_attachment_image( $about_img_id, 'large', false, [ 'class' => 'about__img' ] ); ?>
       </div>
-      <div class="about__content">
+      <?php endif; ?>
+      <div class="about__content"><?php // phpcs:ignore ?>
         <h2 class="section-title"><?php esc_html_e( 'About SolMaram', 'solmaram' ); ?></h2>
         <?php
         // Check for a language-specific HTML option (sm_about_text_en, sm_about_text_pt).
