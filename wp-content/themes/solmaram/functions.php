@@ -1,6 +1,15 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
+/* ── Auto-tag new product reviews with current Polylang language ────────────── */
+// Without this, reviews submitted via the WooCommerce form lack _sm_review_lang
+// and are invisible to the homepage carousel meta_query filter.
+add_action( 'comment_post', function ( int $comment_id, $approved, array $data ) {
+    if ( ( $data['comment_type'] ?? '' ) !== 'review' ) return;
+    $lang = function_exists( 'pll_current_language' ) ? pll_current_language() : 'ua';
+    add_comment_meta( $comment_id, '_sm_review_lang', $lang ?: 'ua', true );
+}, 10, 3 );
+
 /* ── Currency switcher ──────────────────────────────────────────────────────── */
 function sm_active_currency(): string {
     $c = strtoupper( sanitize_key( $_COOKIE['sm_currency'] ?? 'uah' ) );
