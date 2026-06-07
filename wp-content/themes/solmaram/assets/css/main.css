@@ -304,6 +304,7 @@
 @media (max-width: 768px) { .fd-teaser__inner { grid-template-columns: 1fr; } }
 
 /* ── About us ──────────────────────────────────────────────────────── */
+.section-about { scroll-margin-top: 80px; }
 .about__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
 .about__img { border-radius: var(--radius-lg); }
 @media (max-width: 768px) { .about__inner { grid-template-columns: 1fr; } }

@@ -106,7 +106,7 @@
   </section>
 
   <?php /* ── 5. About us ──────────────────────────────────────────── */ ?>
-  <section class="section section--alt section-about">
+  <section id="about" class="section section--alt section-about">
     <div class="container about__inner">
       <div class="about__image">
         <?php
