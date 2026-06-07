@@ -209,9 +209,12 @@ add_action( 'init', function () {
     pll_register_string( 'sm_about_text',     get_theme_mod( 'sm_about_text',     '' ), $group );
 } );
 
-/* ── Polylang: make product_cat and sm_use_case taxonomy terms translatable ── */
+/* ── Polylang: make sm_use_case terms translatable via Polylang admin ────── */
+// product_cat is intentionally excluded — adding it breaks product category
+// archive pages (Polylang language-filters the archive query and returns 0
+// products because products are language-agnostic). Term name translation for
+// both taxonomies is handled by the get_term filter below instead.
 add_filter( 'pll_get_taxonomies', function ( array $taxonomies ): array {
-    $taxonomies['product_cat'] = 'product_cat';
     $taxonomies['sm_use_case'] = 'sm_use_case';
     return $taxonomies;
 } );
@@ -284,15 +287,28 @@ add_action( 'pre_get_posts', function ( $q ) {
 }, 1 );
 
 // 3. Safety net: after all pre_get_posts hooks, strip any residual language
-//    tax_query or lang var from product archive queries.
+//    tax_query or lang var from product archive and product taxonomy queries.
+//    Also covers product_cat / sm_use_case archives where WooCommerce never
+//    sets post_type='product' (so the post_type check would exit early).
 add_action( 'pre_get_posts', function ( $q ) {
     if ( is_admin() || ! $q->is_main_query() ) {
         return;
     }
-    if ( $q->get( 'post_type' ) !== 'product' ) {
+
+    $is_product     = $q->get( 'post_type' ) === 'product';
+    $is_product_tax = $q->is_tax( 'product_cat' ) || $q->is_tax( 'sm_use_case' );
+
+    if ( ! $is_product && ! $is_product_tax ) {
         return;
     }
+
+    // Ensure post_type is set so WooCommerce and the template load correctly.
+    if ( $is_product_tax && ! $is_product ) {
+        $q->set( 'post_type', 'product' );
+    }
+
     $q->set( 'lang', '' );
+
     $tax_query = $q->get( 'tax_query' );
     if ( is_array( $tax_query ) ) {
         $q->set( 'tax_query', array_values( array_filter( $tax_query, function ( $clause ) {
