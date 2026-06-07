@@ -117,9 +117,28 @@
       <div class="about__content">
         <h2 class="section-title"><?php esc_html_e( 'About SolMaram', 'solmaram' ); ?></h2>
         <?php
-        $about_text = get_theme_mod( 'sm_about_text', '' );
+        // Check for a language-specific HTML option (sm_about_text_en, sm_about_text_pt).
+        // Falls back to the Customizer theme mod (default / UA language).
+        $lang         = function_exists( 'pll_current_language' )  ? pll_current_language()  : '';
+        $default_lang = function_exists( 'pll_default_language' )  ? pll_default_language()  : 'ua';
+        $about_is_html = false;
+        $about_text    = '';
+
+        if ( $lang && $lang !== $default_lang ) {
+            $lang_text = get_option( "sm_about_text_{$lang}", '' );
+            if ( $lang_text ) {
+                $about_text    = $lang_text;
+                $about_is_html = true; // already formatted HTML — skip wpautop
+            }
+        }
+
+        if ( ! $about_text ) {
+            $about_text = get_theme_mod( 'sm_about_text', '' );
+        }
+
         if ( $about_text ) {
-            echo wp_kses_post( wpautop( $about_text ) );
+            $out = wp_kses_post( $about_text );
+            echo $about_is_html ? $out : wpautop( $out );
         }
         ?>
       </div>

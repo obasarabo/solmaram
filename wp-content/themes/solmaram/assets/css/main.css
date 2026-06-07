@@ -304,9 +304,17 @@
 @media (max-width: 768px) { .fd-teaser__inner { grid-template-columns: 1fr; } }
 
 /* ── About us ──────────────────────────────────────────────────────── */
-.about__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.about__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
 .about__img { border-radius: var(--radius-lg); }
 @media (max-width: 768px) { .about__inner { grid-template-columns: 1fr; } }
+
+.about__content h3 { font-size: 1rem; font-weight: 700; margin: 1.4em 0 .5em; letter-spacing: .02em; text-transform: uppercase; color: var(--color-primary); }
+.about__content ul { list-style: none; padding: 0; margin: 0 0 1em; }
+.about__content ul li { padding: .35em 0 .35em 1.2em; position: relative; }
+.about__content ul li::before { content: '—'; position: absolute; left: 0; color: var(--color-primary); }
+.about__content blockquote { border-left: 3px solid var(--color-primary); margin: 1.4em 0 0; padding: .5em 1em; font-style: italic; color: var(--color-text-muted); }
+.about__content p { margin-bottom: .8em; line-height: 1.7; }
+.about__content p:first-child { font-style: italic; font-size: 1.05rem; color: var(--color-primary); margin-bottom: 1.2em; }
 
 /* ── Shop layout ───────────────────────────────────────────────────── */
 .shop-layout { display: grid; grid-template-columns: 260px 1fr; gap: 40px; padding-block: 48px; }
