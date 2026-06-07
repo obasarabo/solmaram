@@ -151,14 +151,27 @@
       <h2 class="section-title text-center"><?php esc_html_e( 'What Our Customers Say', 'solmaram' ); ?></h2>
 
       <?php
+      $review_lang = function_exists( 'pll_current_language' ) ? pll_current_language() : 'ua';
+
+      // Polylang's comments_clauses filter JOINs wp_posts on language — this
+      // excludes reviews on language-agnostic products. Remove it for this query.
+      $pll_cc = $GLOBALS['wp_filter']['comments_clauses'] ?? null;
+      if ( $pll_cc ) remove_all_filters( 'comments_clauses' );
+
       $reviews = get_comments( [
-          'status'       => 'approve',
-          'type'         => 'review',
-          'number'       => 12,
-          'meta_query'   => [ [ 'key' => 'rating', 'value' => 4, 'compare' => '>=', 'type' => 'NUMERIC' ] ],
-          'orderby'      => 'comment_date_gmt',
-          'order'        => 'DESC',
+          'status'   => 'approve',
+          'type'     => 'review',
+          'number'   => 12,
+          'meta_query' => [
+              'relation' => 'AND',
+              [ 'key' => 'rating',          'value' => 4,            'compare' => '>=', 'type' => 'NUMERIC' ],
+              [ 'key' => '_sm_review_lang', 'value' => $review_lang, 'compare' => '='  ],
+          ],
+          'orderby'  => 'comment_date_gmt',
+          'order'    => 'DESC',
       ] );
+
+      if ( $pll_cc ) $GLOBALS['wp_filter']['comments_clauses'] = $pll_cc;
       ?>
       <?php if ( $reviews ) : ?>
       <div class="reviews-carousel" data-autoplay="true">
