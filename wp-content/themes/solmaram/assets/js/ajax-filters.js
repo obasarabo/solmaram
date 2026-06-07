@@ -52,9 +52,45 @@
     });
   }
 
-  function doFilter(page) {
+  function buildUrl(params, page) {
+    const qs = new URLSearchParams();
+    if (params.product_cat) {
+      [].concat(params.product_cat).forEach(function (v) { qs.append('product_cat[]', v); });
+    }
+    if (params.use_case) {
+      [].concat(params.use_case).forEach(function (v) { qs.append('use_case[]', v); });
+    }
+    if (params.min_price && Number(params.min_price) > 0) qs.set('min_price', params.min_price);
+    if (params.max_price && Number(params.max_price) > 0) qs.set('max_price', params.max_price);
+    if (params.orderby && params.orderby !== 'popularity') qs.set('orderby', params.orderby);
+    if (page && page > 1) qs.set('paged', page);
+    const str = qs.toString();
+    return location.pathname + (str ? '?' + str : '');
+  }
+
+  function applyStateToForm(params) {
+    $('[name="product_cat[]"]').prop('checked', false);
+    $('[name="use_case[]"]').prop('checked', false);
+    [].concat(params.product_cat || []).forEach(function (v) {
+      $('[name="product_cat[]"][value="' + v + '"]').prop('checked', true);
+    });
+    [].concat(params.use_case || []).forEach(function (v) {
+      $('[name="use_case[]"][value="' + v + '"]').prop('checked', true);
+    });
+    if (params.min_price) $('[name="min_price"]').val(params.min_price);
+    if (params.max_price) $('[name="max_price"]').val(params.max_price);
+    if (params.orderby)   $('[name="orderby"]').val(params.orderby);
+  }
+
+  function doFilter(page, skipPush) {
     const params = getParams();
     buildActiveTags(params);
+
+    // Sync browser URL unless called from popstate
+    if (!skipPush) {
+      history.pushState({ params: params, page: page || 1 }, '', buildUrl(params, page));
+    }
+
     $grid.css('opacity', .5);
     $.post(smFilters.ajaxUrl, {
       action: 'solmaram_filter_products',
@@ -70,6 +106,20 @@
       }
     });
   }
+
+  // Restore filters when navigating Back / Forward
+  window.addEventListener('popstate', function (e) {
+    if (e.state && e.state.params) {
+      applyStateToForm(e.state.params);
+      buildActiveTags(e.state.params);
+      doFilter(e.state.page || 1, true);
+    } else {
+      // Landed back on an unfiltered URL — clear everything
+      $('[name="product_cat[]"], [name="use_case[]"]').prop('checked', false);
+      $('[name="min_price"], [name="max_price"]').val('');
+      doFilter(1, true);
+    }
+  });
 
   // Debounce checkbox / select changes
   $(document).on('change', '.js-filter-input', function () {
