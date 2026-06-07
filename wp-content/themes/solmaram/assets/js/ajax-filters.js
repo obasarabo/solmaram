@@ -156,10 +156,15 @@
     doFilter(1);
   });
 
-  // Auto-apply pre-checked filters on page load (e.g. arriving from a category link)
+  // Auto-apply filters on page load when arriving via a filtered URL.
+  // Covers pre-checked checkboxes (category/use-case) and pre-populated price inputs.
+  // skipPush=true because the URL is already correct on direct navigation.
   $(function () {
-    if ( $('.js-filter-input:checked').length > 0 ) {
-      doFilter(1);
+    var hasChecked = $('.js-filter-input:checked').length > 0;
+    var hasPrice   = parseFloat($('[name="min_price"]').val()) > 0 ||
+                     parseFloat($('[name="max_price"]').val()) > 0;
+    if (hasChecked || hasPrice) {
+      doFilter(1, true);
     }
   });
 

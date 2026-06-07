@@ -12,15 +12,16 @@ add_filter( 'query_vars', function ( $vars ) {
     return $vars;
 } );
 
-add_action( 'parse_request', function ( &$wp ) {
-    // Convert array params to empty string so WP doesn't try to process them
-    if ( isset( $_GET['product_cat'] ) && is_array( $_GET['product_cat'] ) ) {
-        $_GET['product_cat'] = '';
-        $wp->query_vars['product_cat'] = '';
+add_action( 'parse_request', function ( $wp ) {
+    // When product_cat[] / use_case[] arrive as arrays, WordPress' parse_tax_query()
+    // tries to urlencode() the array and throws a TypeError. Unset them from WP's
+    // query_vars so they never reach parse_tax_query — but leave $_GET intact so
+    // PHP templates can still pre-check the filter checkboxes.
+    if ( isset( $wp->query_vars['product_cat'] ) && is_array( $wp->query_vars['product_cat'] ) ) {
+        unset( $wp->query_vars['product_cat'] );
     }
-    if ( isset( $_GET['use_case'] ) && is_array( $_GET['use_case'] ) ) {
-        $_GET['use_case'] = '';
-        $wp->query_vars['use_case'] = '';
+    if ( isset( $wp->query_vars['use_case'] ) && is_array( $wp->query_vars['use_case'] ) ) {
+        unset( $wp->query_vars['use_case'] );
     }
 }, 1 );
 
