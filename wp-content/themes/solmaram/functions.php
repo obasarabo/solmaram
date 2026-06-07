@@ -1,6 +1,35 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
+/* ── Currency switcher ──────────────────────────────────────────────────────── */
+function sm_active_currency(): string {
+    $c = strtoupper( sanitize_key( $_COOKIE['sm_currency'] ?? 'uah' ) );
+    return in_array( $c, [ 'UAH', 'USD', 'EUR' ], true ) ? $c : 'UAH';
+}
+
+add_action( 'init', function () {
+    $currency = sm_active_currency();
+
+    // Always display prices without decimals (UAH has no kopecks in UX)
+    add_filter( 'woocommerce_price_decimals', fn() => 0 );
+
+    if ( $currency === 'UAH' ) return;
+
+    // Rates relative to UAH base: 1 USD = 45 UAH, 1 EUR = 52 UAH
+    $rates = [ 'USD' => 1 / 45, 'EUR' => 1 / 52 ];
+    $rate  = $rates[ $currency ];
+
+    add_filter( 'woocommerce_currency', fn() => $currency );
+
+    $convert = function ( $price ) use ( $rate ) {
+        return ( $price !== '' && $price !== null ) ? (string) round( (float) $price * $rate ) : $price;
+    };
+    foreach ( [ 'price', 'sale_price', 'regular_price' ] as $field ) {
+        add_filter( "woocommerce_product_get_{$field}",           $convert );
+        add_filter( "woocommerce_product_variation_get_{$field}", $convert );
+    }
+} );
+
 /* ── Disable array-format filter params in main query (AJAX handles them) ──── */
 // When ?product_cat[]=slug&use_case[]=slug arrive, WordPress sees product_cat
 // as a recognized tax query var and tries to parse it, but it's an array which

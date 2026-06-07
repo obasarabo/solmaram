@@ -1,3 +1,29 @@
+/* ── Currency switcher ──────────────────────────────────────────────── */
+.currency-switcher {
+  display: inline-flex;
+  align-items: center;
+}
+.currency-switcher__select {
+  appearance: none;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: none;
+  cursor: pointer;
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: .04em;
+  font-family: var(--font-body);
+  transition: border-color .15s, background .15s;
+  outline: none;
+}
+.currency-switcher__select:hover,
+.currency-switcher__select:focus {
+  border-color: var(--color-primary);
+  background: var(--color-bg-alt);
+}
+
 /* ── Language switcher ─────────────────────────────────────────────── */
 .lang-switcher {
   position: relative;

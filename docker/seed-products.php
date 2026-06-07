@@ -45,3 +45,8 @@ foreach ( $products as $p ) {
 
     WP_CLI::success( 'Created: ' . $p['name'] . ' (ID ' . $post_id . ')' );
 }
+
+// WooCommerce currency settings: UAH base, no decimals
+update_option( 'woocommerce_currency',             'UAH' );
+update_option( 'woocommerce_price_num_decimals',   0 );
+WP_CLI::success( 'WooCommerce currency set to UAH with 0 decimals.' );

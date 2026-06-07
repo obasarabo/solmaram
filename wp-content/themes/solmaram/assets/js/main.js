@@ -90,4 +90,10 @@
     });
   });
 
+  // Currency switcher — set cookie and reload
+  document.querySelector('.js-currency-select')?.addEventListener('change', function () {
+    document.cookie = 'sm_currency=' + this.value + '; path=/; max-age=' + (365 * 24 * 3600) + '; SameSite=Lax';
+    location.reload();
+  });
+
 })();

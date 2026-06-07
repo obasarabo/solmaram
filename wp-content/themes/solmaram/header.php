@@ -96,6 +96,17 @@
       </div>
       <?php endif; endif; ?>
 
+      <!-- Currency switcher -->
+      <?php if ( function_exists( 'sm_active_currency' ) ) : ?>
+      <div class="currency-switcher">
+        <select class="currency-switcher__select js-currency-select" aria-label="<?php esc_attr_e( 'Select currency', 'solmaram' ); ?>">
+          <option value="UAH" <?php selected( sm_active_currency(), 'UAH' ); ?>>₴ UAH</option>
+          <option value="USD" <?php selected( sm_active_currency(), 'USD' ); ?>>$ USD</option>
+          <option value="EUR" <?php selected( sm_active_currency(), 'EUR' ); ?>>€ EUR</option>
+        </select>
+      </div>
+      <?php endif; ?>
+
       <!-- Search toggle -->
       <button class="header-btn js-search-toggle" aria-label="<?php esc_attr_e( 'Search', 'solmaram' ); ?>" aria-expanded="false">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
