@@ -65,7 +65,9 @@
     if (cards.length > 1) {
       setInterval(() => {
         idx = (idx + 1) % cards.length;
-        cards[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        // Scroll only within the carousel track — never touch window scroll position.
+        const cardLeft = cards[idx].offsetLeft;
+        carousel.scrollTo({ left: cardLeft, behavior: 'smooth' });
       }, 4000);
     }
   }
