@@ -15,18 +15,11 @@ services:
       --innodb-redo-log-capacity=134217728
       --innodb-flush-method=O_DIRECT
 
-  redis:
-    image: redis:7-alpine
-    restart: unless-stopped
-    # 128 MB cap; evict least-recently-used keys when full
-    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru --save ""
-
   wordpress:
-    build: ./docker          # extends official image + adds phpredis extension
+    build: ./docker
     restart: unless-stopped
     depends_on:
       - db
-      - redis
     ports:
       - "8080:80"
     environment:
@@ -35,13 +28,6 @@ services:
       WORDPRESS_DB_USER: wp
       WORDPRESS_DB_PASSWORD: wppass
       WORDPRESS_DEBUG: "1"
-      WORDPRESS_CONFIG_EXTRA: |
-        define( 'WP_REDIS_HOST',         'redis' );
-        define( 'WP_REDIS_PORT',         6379 );
-        define( 'WP_REDIS_TIMEOUT',      1 );
-        define( 'WP_REDIS_READ_TIMEOUT', 1 );
-        define( 'WP_CACHE_KEY_SALT',     'solmaram_' );
-        define( 'WP_CACHE',              true );
     volumes:
       - wp_core:/var/www/html
       - ./wp-content:/var/www/html/wp-content
@@ -56,19 +42,11 @@ services:
     depends_on:
       - db
       - wordpress
-      - redis
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DB_USER: wp
       WORDPRESS_DB_PASSWORD: wppass
-      WORDPRESS_CONFIG_EXTRA: |
-        define( 'WP_REDIS_HOST',         'redis' );
-        define( 'WP_REDIS_PORT',         6379 );
-        define( 'WP_REDIS_TIMEOUT',      1 );
-        define( 'WP_REDIS_READ_TIMEOUT', 1 );
-        define( 'WP_CACHE_KEY_SALT',     'solmaram_' );
-        define( 'WP_CACHE',              true );
     volumes:
       - wp_core:/var/www/html
       - ./wp-content:/var/www/html/wp-content

@@ -1,7 +1,2 @@
 FROM wordpress:cli-php8.3
-USER root
-RUN apk add --no-cache --virtual .build-deps autoconf g++ make \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
-    && apk del .build-deps
 USER www-data
