@@ -99,9 +99,17 @@
               $is_current = ! empty( $lang['current_lang'] );
           ?>
             <li role="option" aria-selected="<?php echo $is_current ? 'true' : 'false'; ?>">
+              <?php
+              $is_filter_page = function_exists( 'is_shop' ) && ( is_shop() || is_product_category() );
+              // Strip filter params from the base URL so JS can re-append the live ones.
+              $base_url = $is_filter_page
+                  ? remove_query_arg( [ 'product_cat', 'product_cat[]', 'use_case', 'use_case[]', 'min_price', 'max_price', 'orderby', 'paged' ], $lang['url'] )
+                  : $lang['url'];
+              ?>
               <a href="<?php echo esc_url( $lang['url'] ); ?>"
                  class="lang-switcher__option <?php echo $is_current ? 'is-active' : ''; ?>"
                  hreflang="<?php echo esc_attr( $lang['slug'] ); ?>"
+                 <?php if ( $is_filter_page ) : ?>data-base-url="<?php echo esc_url( $base_url ); ?>"<?php endif; ?>
                  <?php echo $is_current ? 'aria-current="true"' : ''; ?>>
                 <?php echo esc_html( strtoupper( $lang['slug'] ) ); ?>
                 <span class="lang-switcher__name"><?php echo esc_html( $lang['name'] ); ?></span>

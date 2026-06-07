@@ -68,6 +68,13 @@
     return location.pathname + (str ? '?' + str : '');
   }
 
+  function syncLangSwitcher() {
+    var qs = location.search;
+    document.querySelectorAll('.lang-switcher__option[data-base-url]').forEach(function (a) {
+      a.href = a.dataset.baseUrl + qs;
+    });
+  }
+
   function applyStateToForm(params) {
     $('[name="product_cat[]"]').prop('checked', false);
     $('[name="use_case[]"]').prop('checked', false);
@@ -90,6 +97,7 @@
     if (!skipPush) {
       history.pushState({ params: params, page: page || 1 }, '', buildUrl(params, page));
     }
+    syncLangSwitcher();
 
     $grid.css('opacity', .5);
     $.post(smFilters.ajaxUrl, {
