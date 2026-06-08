@@ -145,6 +145,27 @@ add_action( 'plugins_loaded', function () {
 function solmaram_ajax_filter_products() {
     check_ajax_referer( 'sm_filter', 'nonce' );
 
+    // admin-ajax has no language prefix, so Polylang defaults to UA — filtered
+    // product names and the "No products found" string come back Ukrainian even on
+    // the EN/PT shop. Detect the language from the shop-page referer and apply it.
+    if ( function_exists( 'PLL' ) && function_exists( 'pll_default_language' ) && function_exists( 'pll_languages_list' ) ) {
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+        foreach ( pll_languages_list( [ 'fields' => 'slug' ] ) as $slug ) {
+            if ( $slug !== pll_default_language() && $referer && strpos( $referer, '/' . $slug . '/' ) !== false ) {
+                $lang = PLL()->model->get_language( $slug );
+                if ( $lang ) {
+                    PLL()->curlang = $lang;
+                    // Reload textdomains so filtered product names + the "No products
+                    // found." string come back localized (admin-ajax has no language).
+                    if ( ! empty( $lang->locale ) && function_exists( 'sm_switch_locale_full' ) ) {
+                        sm_switch_locale_full( $lang->locale );
+                    }
+                }
+                break;
+            }
+        }
+    }
+
     $paged     = max( 1, absint( $_POST['paged'] ?? 1 ) );
     $orderby   = sanitize_key( $_POST['orderby'] ?? 'popularity' );
     $min_price = floatval( $_POST['min_price'] ?? 0 );

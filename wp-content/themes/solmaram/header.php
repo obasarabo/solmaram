@@ -57,6 +57,18 @@
                   }
               }
           }
+          // Products are language-agnostic (one shared URL with no /xx/ prefix), so
+          // Polylang points every language at its home page and a prefixed product
+          // URL just redirects back to the canonical one. Instead, keep every option
+          // on the same product URL and let JS set the pll_language cookie + reload;
+          // the product page reads that cookie to pick its render language.
+          $is_product_page = function_exists( 'is_product' ) && is_product();
+          if ( $is_product_page ) {
+              $product_url = get_permalink();
+              foreach ( $languages as $slug => $lang ) {
+                  $languages[ $slug ]['url'] = $product_url;
+              }
+          }
 
           if ( count( $languages ) > 1 ) :
       ?>
@@ -86,6 +98,7 @@
                  class="lang-switcher__option <?php echo $is_current ? 'is-active' : ''; ?>"
                  hreflang="<?php echo esc_attr( $lang['slug'] ); ?>"
                  <?php if ( $is_filter_page ) : ?>data-base-url="<?php echo esc_url( $base_url ); ?>"<?php endif; ?>
+                 <?php if ( ! empty( $is_product_page ) ) : ?>data-set-lang="<?php echo esc_attr( $lang['slug'] ); ?>"<?php endif; ?>
                  <?php echo $is_current ? 'aria-current="true"' : ''; ?>>
                 <?php echo esc_html( strtoupper( $lang['slug'] ) ); ?>
                 <span class="lang-switcher__name"><?php echo esc_html( $lang['name'] ); ?></span>

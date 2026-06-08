@@ -32,6 +32,78 @@ add_action( 'rest_api_init', function () {
     } catch ( \Exception $e ) {}
 }, 0 );
 
+/* ── Language for language-agnostic single product pages ───────────────────── */
+// Products are excluded from Polylang (one post shared across languages), so on
+// /product/… Polylang always falls back to the default language — the menu, H1
+// title and tabs render in Ukrainian even for EN/PT visitors, and the translated
+// _sm_name_{lang} is never shown. Detect the visitor's language (URL prefix, then
+// the pll_language cookie) and push it into Polylang + reload textdomains before
+// the template renders.
+function sm_detect_agnostic_lang(): string {
+    if ( ! function_exists( 'pll_languages_list' ) || ! function_exists( 'pll_default_language' ) ) {
+        return '';
+    }
+    $slugs = pll_languages_list( [ 'fields' => 'slug' ] );
+    // 1) Explicit URL prefix, e.g. /en/product/… or /pt/product/…
+    $uri = $_SERVER['REQUEST_URI'] ?? '';
+    foreach ( $slugs as $s ) {
+        if ( preg_match( '#^/' . preg_quote( $s, '#' ) . '(/|$)#', $uri ) ) {
+            return $s;
+        }
+    }
+    // 2) Polylang cookie, set while the visitor browsed translated pages
+    $c = isset( $_COOKIE['pll_language'] ) ? sanitize_key( $_COOKIE['pll_language'] ) : '';
+    if ( $c && in_array( $c, $slugs, true ) ) {
+        return $c;
+    }
+    return '';
+}
+
+// Switch the request locale AND reload the eagerly-loaded textdomains. WordPress'
+// switch_to_locale() does not reload domains that plugins/themes loaded up-front
+// (theme 'solmaram' on after_setup_theme, 'woocommerce' on init), so their __()
+// strings would stay in the original locale. Force-reload them.
+function sm_switch_locale_full( string $locale ): void {
+    if ( ! $locale ) {
+        return;
+    }
+    switch_to_locale( $locale );
+
+    unload_textdomain( 'solmaram' );
+    load_theme_textdomain( 'solmaram', get_template_directory() . '/languages' );
+
+    unload_textdomain( 'woocommerce' );
+    $wc_mo = WP_LANG_DIR . '/plugins/woocommerce-' . $locale . '.mo';
+    if ( file_exists( $wc_mo ) ) {
+        load_textdomain( 'woocommerce', $wc_mo ); // en_US has no pack → source English
+    }
+}
+
+add_action( 'wp', function () {
+    if ( is_admin() || ! function_exists( 'PLL' ) || ! function_exists( 'pll_default_language' ) ) {
+        return;
+    }
+    if ( ! is_singular( 'product' ) ) {
+        return;
+    }
+    $slug = sm_detect_agnostic_lang();
+    if ( ! $slug || $slug === pll_default_language() ) {
+        return;
+    }
+    $pll = PLL();
+    if ( ! isset( $pll->model ) ) {
+        return;
+    }
+    $lang = $pll->model->get_language( $slug );
+    if ( ! $lang ) {
+        return;
+    }
+    $pll->curlang = $lang;
+    if ( ! empty( $lang->locale ) ) {
+        sm_switch_locale_full( $lang->locale );
+    }
+} );
+
 /* ── Auto-tag new product reviews with current Polylang language ────────────── */
 // Without this, reviews submitted via the WooCommerce form lack _sm_review_lang
 // and are invisible to the homepage carousel meta_query filter.
@@ -318,15 +390,13 @@ add_action( 'init', function () {
     pll_register_string( 'sm_about_text',     get_theme_mod( 'sm_about_text',     '' ), $group );
 } );
 
-/* ── Polylang: make sm_use_case terms translatable via Polylang admin ────── */
-// product_cat is intentionally excluded — adding it breaks product category
-// archive pages (Polylang language-filters the archive query and returns 0
-// products because products are language-agnostic). Term name translation for
-// both taxonomies is handled by the get_term filter below instead.
-add_filter( 'pll_get_taxonomies', function ( array $taxonomies ): array {
-    $taxonomies['sm_use_case'] = 'sm_use_case';
-    return $taxonomies;
-} );
+/* ── Polylang: keep product taxonomies language-neutral ─────────────────── */
+// Both product_cat and sm_use_case are intentionally NOT registered with Polylang.
+// Products are language-agnostic, so their terms exist only in the default language;
+// if Polylang managed these taxonomies it would language-filter the queries and
+// return 0 results in EN/PT (category archives, the use-case filter, and the AJAX
+// filter when a non-default language is active). Term-name display translation is
+// handled by the get_term filter above instead.
 
 /* ── Polylang: translate WooCommerce page IDs per language (FR-03/04) ─ */
 // Without Polylang for WooCommerce, WC options always store the default-language
@@ -431,6 +501,57 @@ add_action( 'pre_get_posts', function ( $q ) {
         } ) ) );
     }
 }, 999 );
+
+// 4. Apply category / use-case filters to the shop archive server-side.
+//    Checkbox filters arrive as product_cat[] / use_case[] arrays, which are
+//    stripped from query_vars (priority 1 above) to avoid a urlencode() TypeError,
+//    so WooCommerce never filters by them on the first paint — only the client-side
+//    AJAX does. Read them from $_GET and add a clean tax_query so the no-JS /
+//    first-paint / crawler render matches the AJAX result. Price is left to
+//    WooCommerce's native min_price/max_price handling (its lookup table is kept
+//    current via regenerate_product_lookup_tables).
+add_action( 'pre_get_posts', function ( $q ) {
+    if ( is_admin() || ! $q->is_main_query() ) {
+        return;
+    }
+    $is_shop_like = $q->get( 'post_type' ) === 'product'
+        || $q->is_post_type_archive( 'product' )
+        || $q->is_tax( 'product_cat' )
+        || $q->is_tax( 'sm_use_case' );
+    if ( ! $is_shop_like ) {
+        return;
+    }
+
+    $cats      = array_filter( array_map( 'sanitize_key', (array) ( $_GET['product_cat'] ?? [] ) ) );
+    $use_cases = array_filter( array_map( 'sanitize_key', (array) ( $_GET['use_case'] ?? [] ) ) );
+    if ( ! $cats && ! $use_cases ) {
+        return;
+    }
+
+    // Preserve existing clauses (e.g. product_visibility) and the relation, but
+    // drop any product_cat / sm_use_case clause so we don't filter on it twice.
+    $existing = (array) $q->get( 'tax_query' );
+    $clauses  = [];
+    foreach ( $existing as $key => $clause ) {
+        if ( $key === 'relation' || ! is_array( $clause ) ) {
+            continue;
+        }
+        if ( isset( $clause['taxonomy'] ) && in_array( $clause['taxonomy'], [ 'product_cat', 'sm_use_case' ], true ) ) {
+            continue;
+        }
+        $clauses[] = $clause;
+    }
+    if ( $cats ) {
+        $clauses[] = [ 'taxonomy' => 'product_cat', 'field' => 'slug', 'terms' => $cats ];
+    }
+    if ( $use_cases ) {
+        $clauses[] = [ 'taxonomy' => 'sm_use_case', 'field' => 'slug', 'terms' => $use_cases ];
+    }
+    if ( count( $clauses ) > 1 ) {
+        $clauses['relation'] = 'AND';
+    }
+    $q->set( 'tax_query', $clauses );
+}, 11 );
 
 /* ── hreflang for Polylang (FR-12) ────────────────────────────────── */
 add_action( 'wp_head', function () {
