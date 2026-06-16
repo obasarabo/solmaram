@@ -25,6 +25,14 @@ class SM_Product_I18n {
         // the_title() is used in content-product.php card template
         add_filter( 'the_title',                                 [ __CLASS__, 'translate_title' ],             10, 2 );
 
+        // The single-product templates render post_content (the "Product Description"
+        // tab, via the_content()) and post_excerpt (the short description under the
+        // price, via the woocommerce_short_description filter) directly — bypassing the
+        // WooCommerce getters above. Translate those rendering paths too. Priority 9 so
+        // WordPress' own formatting callbacks (wpautop, do_shortcode…) still run after.
+        add_filter( 'the_content',                  [ __CLASS__, 'translate_content' ], 9 );
+        add_filter( 'woocommerce_short_description', [ __CLASS__, 'translate_excerpt' ], 9 );
+
         // Admin: meta box
         add_action( 'add_meta_boxes_product', [ __CLASS__, 'register_meta_box' ] );
         add_action( 'save_post_product',      [ __CLASS__, 'save_meta_box' ], 10, 2 );
@@ -62,6 +70,20 @@ class SM_Product_I18n {
     public static function translate_title( string $title, int $post_id ): string {
         if ( get_post_type( $post_id ) !== 'product' ) return $title;
         return self::translated( $title, $post_id, 'name' );
+    }
+
+    public static function translate_content( string $content ): string {
+        if ( is_admin() || ! is_singular( 'product' ) ) return $content;
+        $post = get_post();
+        if ( ! $post || $post->post_type !== 'product' ) return $content;
+        return self::translated( $content, $post->ID, 'description' );
+    }
+
+    public static function translate_excerpt( string $excerpt ): string {
+        if ( is_admin() || ! function_exists( 'is_product' ) || ! is_product() ) return $excerpt;
+        $post = get_post();
+        if ( ! $post || $post->post_type !== 'product' ) return $excerpt;
+        return self::translated( $excerpt, $post->ID, 'short_description' );
     }
 
     // ── Admin meta box ───────────────────────────────────────────────────

@@ -20,6 +20,17 @@ if ( ! $product || ! $product->is_visible() ) return;
     } else {
         echo wc_placeholder_img( 'product-card' );
     }
+
+    // Hover image: reveal the first gallery image on hover (if the product has one).
+    $gallery_ids = $product->get_gallery_image_ids();
+    if ( ! empty( $gallery_ids ) ) {
+        echo wp_get_attachment_image( $gallery_ids[0], 'product-card', false, [
+            'class'       => 'product-card__img product-card__img--hover',
+            'alt'         => esc_attr( $product->get_name() ),
+            'aria-hidden' => 'true',
+            'loading'     => 'lazy',
+        ] );
+    }
     ?>
     <?php if ( ! $product->is_in_stock() ) : ?>
       <span class="product-card__badge product-card__badge--out"><?php esc_html_e( 'Out of stock', 'solmaram' ); ?></span>

@@ -84,14 +84,9 @@
     location.reload();
   });
 
-  // Language switcher on language-agnostic product pages — the URL carries no
-  // /xx/ prefix, so set the Polylang cookie and reload to switch the render language.
-  document.querySelectorAll('.lang-switcher__option[data-set-lang]').forEach(function (link) {
-    link.addEventListener('click', function (e) {
-      e.preventDefault();
-      document.cookie = 'pll_language=' + this.dataset.setLang + '; path=/; max-age=' + (365 * 24 * 3600) + '; SameSite=Lax';
-      location.reload();
-    });
-  });
+  // NOTE: On language-agnostic product pages the language options link to
+  // <product-url>?sm_set_lang=<slug>; the server sets the sm_lang cookie and
+  // redirects to the clean URL. No client-side handling is needed (and a
+  // cookie+reload here would race, sometimes needing a second click).
 
 })();

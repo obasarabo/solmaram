@@ -36,9 +36,15 @@ add_action( 'rest_api_init', function () {
 // Products are excluded from Polylang (one post shared across languages), so on
 // /product/… Polylang always falls back to the default language — the menu, H1
 // title and tabs render in Ukrainian even for EN/PT visitors, and the translated
-// _sm_name_{lang} is never shown. Detect the visitor's language (URL prefix, then
-// the pll_language cookie) and push it into Polylang + reload textdomains before
-// the template renders.
+// _sm_name_{lang} is never shown. Detect the visitor's language and push it into
+// Polylang + reload textdomains before the template renders.
+//
+// NOTE: We must NOT rely on the `pll_language` cookie to carry the choice — on a
+// language-agnostic product URL Polylang determines the language from the URL
+// (no prefix → default) and re-sets `pll_language` to the default on every
+// response, clobbering anything the switcher wrote. We use our own `sm_lang`
+// cookie, which Polylang never touches, so the choice persists across
+// product→product navigation.
 function sm_detect_agnostic_lang(): string {
     if ( ! function_exists( 'pll_languages_list' ) || ! function_exists( 'pll_default_language' ) ) {
         return '';
@@ -51,7 +57,23 @@ function sm_detect_agnostic_lang(): string {
             return $s;
         }
     }
-    // 2) Polylang cookie, set while the visitor browsed translated pages
+    // 2) Our own persistent cookie, written by the language switcher. Polylang
+    //    never manages this name, so it survives the product-page cookie reset.
+    $c = isset( $_COOKIE['sm_lang'] ) ? sanitize_key( $_COOKIE['sm_lang'] ) : '';
+    if ( $c && in_array( $c, $slugs, true ) ) {
+        return $c;
+    }
+    // 3) Referer language prefix — visitor arrived at the product from an /en/ or
+    //    /pt/ page (e.g. the translated shop), so inherit that language.
+    $referer = $_SERVER['HTTP_REFERER'] ?? '';
+    if ( $referer ) {
+        foreach ( $slugs as $s ) {
+            if ( $s !== pll_default_language() && str_contains( $referer, '/' . $s . '/' ) ) {
+                return $s;
+            }
+        }
+    }
+    // 4) Legacy fallback: Polylang cookie, set while browsing translated pages.
     $c = isset( $_COOKIE['pll_language'] ) ? sanitize_key( $_COOKIE['pll_language'] ) : '';
     if ( $c && in_array( $c, $slugs, true ) ) {
         return $c;
@@ -79,6 +101,32 @@ function sm_switch_locale_full( string $locale ): void {
     }
 }
 
+// Server-driven language switch for language-agnostic product pages. The switcher
+// links to <product-url>?sm_set_lang=<slug>; we write the persistent sm_lang cookie
+// and 302-redirect to the clean URL. A single click switches reliably — no JS
+// document.cookie + location.reload() race (which could need a second click), and
+// it works with JavaScript disabled.
+add_action( 'template_redirect', function () {
+    if ( empty( $_GET['sm_set_lang'] ) || ! function_exists( 'pll_languages_list' ) ) {
+        return;
+    }
+    $slug  = sanitize_key( wp_unslash( $_GET['sm_set_lang'] ) );
+    $slugs = pll_languages_list( [ 'fields' => 'slug' ] );
+    if ( in_array( $slug, $slugs, true ) && ! headers_sent() ) {
+        setcookie(
+            'sm_lang',
+            $slug,
+            time() + YEAR_IN_SECONDS,
+            defined( 'COOKIEPATH' ) && COOKIEPATH ? COOKIEPATH : '/',
+            defined( 'COOKIE_DOMAIN' ) ? COOKIE_DOMAIN : '',
+            is_ssl(),
+            false
+        );
+    }
+    wp_safe_redirect( remove_query_arg( 'sm_set_lang' ) );
+    exit;
+}, 1 );
+
 add_action( 'wp', function () {
     if ( is_admin() || ! function_exists( 'PLL' ) || ! function_exists( 'pll_default_language' ) ) {
         return;
@@ -86,9 +134,33 @@ add_action( 'wp', function () {
     if ( ! is_singular( 'product' ) ) {
         return;
     }
-    $slug = sm_detect_agnostic_lang();
-    if ( ! $slug || $slug === pll_default_language() ) {
+    // The ?sm_set_lang switch request is handled (and redirected) on
+    // template_redirect; don't write a competing sm_lang cookie here.
+    if ( isset( $_GET['sm_set_lang'] ) ) {
         return;
+    }
+    $slug = sm_detect_agnostic_lang();
+    if ( ! $slug ) {
+        return;
+    }
+    // Persist the resolved language in our own cookie so it survives the next
+    // product-page load (where Polylang would otherwise reset pll_language to the
+    // default). This keeps a referer-inherited or previously-chosen language sticky
+    // across product→product navigation.
+    if ( ! headers_sent() && ( ! isset( $_COOKIE['sm_lang'] ) || $_COOKIE['sm_lang'] !== $slug ) ) {
+        setcookie(
+            'sm_lang',
+            $slug,
+            time() + YEAR_IN_SECONDS,
+            defined( 'COOKIEPATH' ) && COOKIEPATH ? COOKIEPATH : '/',
+            defined( 'COOKIE_DOMAIN' ) ? COOKIE_DOMAIN : '',
+            is_ssl(),
+            false
+        );
+        $_COOKIE['sm_lang'] = $slug;
+    }
+    if ( $slug === pll_default_language() ) {
+        return; // Default language → no locale switch needed, cookie already set.
     }
     $pll = PLL();
     if ( ! isset( $pll->model ) ) {
@@ -116,7 +188,7 @@ add_action( 'comment_post', function ( int $comment_id, $approved, array $data )
 /* ── Currency switcher ──────────────────────────────────────────────────────── */
 function sm_active_currency(): string {
     $c = strtoupper( sanitize_key( $_COOKIE['sm_currency'] ?? 'uah' ) );
-    return in_array( $c, [ 'UAH', 'USD', 'EUR' ], true ) ? $c : 'UAH';
+    return in_array( $c, [ 'UAH', 'EUR' ], true ) ? $c : 'UAH';
 }
 
 add_action( 'init', function () {
@@ -127,8 +199,8 @@ add_action( 'init', function () {
 
     if ( $currency === 'UAH' ) return;
 
-    // Rates relative to UAH base: 1 USD = 45 UAH, 1 EUR = 52 UAH
-    $rates = [ 'USD' => 1 / 45, 'EUR' => 1 / 52 ];
+    // Rates relative to UAH base: 1 EUR = 52 UAH
+    $rates = [ 'EUR' => 1 / 52 ];
     $rate  = $rates[ $currency ];
 
     add_filter( 'woocommerce_currency', fn() => $currency );
@@ -175,6 +247,12 @@ add_action( 'after_setup_theme', function () {
     add_theme_support( 'html5', [ 'search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script' ] );
     add_theme_support( 'customize-selective-refresh-widgets' );
     add_theme_support( 'align-wide' );
+    add_theme_support( 'custom-logo', [
+        'height'      => 96,
+        'width'       => 96,
+        'flex-height' => true,
+        'flex-width'  => true,
+    ] );
 
     // WooCommerce
     add_theme_support( 'woocommerce', [
@@ -203,7 +281,13 @@ add_action( 'after_setup_theme', function () {
 /* ── Enqueue assets ────────────────────────────────────────────────── */
 add_action( 'wp_enqueue_scripts', function () {
     $theme_uri = get_template_directory_uri();
+    $theme_dir = get_template_directory();
     $ver       = wp_get_theme()->get( 'Version' );
+    // Cache-bust local assets by file modification time so edits are picked up immediately.
+    $asset_ver = static function ( string $rel ) use ( $theme_dir, $ver ) {
+        $path = $theme_dir . $rel;
+        return file_exists( $path ) ? (string) filemtime( $path ) : $ver;
+    };
 
     // Google Fonts
     wp_enqueue_style(
@@ -213,11 +297,11 @@ add_action( 'wp_enqueue_scripts', function () {
         null
     );
 
-    wp_enqueue_style( 'solmaram-style', get_stylesheet_uri(), [ 'solmaram-fonts' ], $ver );
-    wp_enqueue_style( 'solmaram-main',  $theme_uri . '/assets/css/main.css', [ 'solmaram-style' ], $ver );
+    wp_enqueue_style( 'solmaram-style', get_stylesheet_uri(), [ 'solmaram-fonts' ], $asset_ver( '/style.css' ) );
+    wp_enqueue_style( 'solmaram-main',  $theme_uri . '/assets/css/main.css', [ 'solmaram-style' ], $asset_ver( '/assets/css/main.css' ) );
 
     if ( class_exists( 'WooCommerce' ) ) {
-        wp_enqueue_style( 'solmaram-woo', $theme_uri . '/assets/css/woocommerce.css', [ 'solmaram-main' ], $ver );
+        wp_enqueue_style( 'solmaram-woo', $theme_uri . '/assets/css/woocommerce.css', [ 'solmaram-main' ], $asset_ver( '/assets/css/woocommerce.css' ) );
     }
 
     wp_enqueue_script( 'solmaram-main', $theme_uri . '/assets/js/main.js', [], $ver, true );

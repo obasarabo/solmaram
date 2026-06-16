@@ -15,15 +15,13 @@
   <div class="container header-inner">
 
     <!-- Logo -->
-    <a class="site-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-      <?php
-      if ( has_custom_logo() ) {
-          the_custom_logo();
-      } else {
-          echo '<span class="site-logo__text">' . esc_html( get_bloginfo( 'name' ) ) . '</span>';
-      }
-      ?>
-    </a>
+    <?php if ( has_custom_logo() ) : ?>
+      <div class="site-logo"><?php the_custom_logo(); ?></div>
+    <?php else : ?>
+      <a class="site-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
+        <span class="site-logo__text"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span>
+      </a>
+    <?php endif; ?>
 
     <!-- Primary navigation -->
     <nav class="site-nav" aria-label="<?php esc_attr_e( 'Primary', 'solmaram' ); ?>">
@@ -59,14 +57,14 @@
           }
           // Products are language-agnostic (one shared URL with no /xx/ prefix), so
           // Polylang points every language at its home page and a prefixed product
-          // URL just redirects back to the canonical one. Instead, keep every option
-          // on the same product URL and let JS set the pll_language cookie + reload;
-          // the product page reads that cookie to pick its render language.
+          // URL just redirects back to the canonical one. Point each option at the
+          // same product URL with ?sm_set_lang=<slug>; the server sets the sm_lang
+          // cookie and redirects back to the clean URL (see functions.php).
           $is_product_page = function_exists( 'is_product' ) && is_product();
           if ( $is_product_page ) {
               $product_url = get_permalink();
               foreach ( $languages as $slug => $lang ) {
-                  $languages[ $slug ]['url'] = $product_url;
+                  $languages[ $slug ]['url'] = add_query_arg( 'sm_set_lang', $slug, $product_url );
               }
           }
 
@@ -98,7 +96,6 @@
                  class="lang-switcher__option <?php echo $is_current ? 'is-active' : ''; ?>"
                  hreflang="<?php echo esc_attr( $lang['slug'] ); ?>"
                  <?php if ( $is_filter_page ) : ?>data-base-url="<?php echo esc_url( $base_url ); ?>"<?php endif; ?>
-                 <?php if ( ! empty( $is_product_page ) ) : ?>data-set-lang="<?php echo esc_attr( $lang['slug'] ); ?>"<?php endif; ?>
                  <?php echo $is_current ? 'aria-current="true"' : ''; ?>>
                 <?php echo esc_html( strtoupper( $lang['slug'] ) ); ?>
                 <span class="lang-switcher__name"><?php echo esc_html( $lang['name'] ); ?></span>
@@ -114,7 +111,6 @@
       <div class="currency-switcher">
         <select class="currency-switcher__select js-currency-select" aria-label="<?php esc_attr_e( 'Select currency', 'solmaram' ); ?>">
           <option value="UAH" <?php selected( sm_active_currency(), 'UAH' ); ?>>₴ UAH</option>
-          <option value="USD" <?php selected( sm_active_currency(), 'USD' ); ?>>$ USD</option>
           <option value="EUR" <?php selected( sm_active_currency(), 'EUR' ); ?>>€ EUR</option>
         </select>
       </div>

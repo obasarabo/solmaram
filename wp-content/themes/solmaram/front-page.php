@@ -6,6 +6,9 @@
   <?php
   $hero_image_id  = get_theme_mod( 'sm_hero_image' );
   $hero_image_url = $hero_image_id ? wp_get_attachment_image_url( $hero_image_id, 'hero-full' ) : '';
+  if ( ! $hero_image_url ) {
+    $hero_image_url = get_template_directory_uri() . '/assets/images/hero.png';
+  }
   ?>
   <section class="hero" style="<?php echo $hero_image_url ? 'background-image:url(' . esc_url( $hero_image_url ) . ')' : ''; ?>">
     <div class="container hero__inner">
@@ -25,10 +28,10 @@
       <ul class="values-grid">
         <?php
         $values = [
-            [ 'img_id' => 136, 'label' => __( '100% Natural',      'solmaram' ) ],
-            [ 'img_id' => 137, 'label' => __( 'Rich in Vitamins',  'solmaram' ) ],
-            [ 'img_id' => 138, 'label' => __( 'No Preservatives',  'solmaram' ) ],
-            [ 'img_id' => 139, 'label' => __( 'Long Shelf Life',   'solmaram' ) ],
+            [ 'img_id' => 185, 'label' => __( '100% Natural',      'solmaram' ) ],
+            [ 'img_id' => 186, 'label' => __( 'Rich in Vitamins',  'solmaram' ) ],
+            [ 'img_id' => 187, 'label' => __( 'No Preservatives',  'solmaram' ) ],
+            [ 'img_id' => 188, 'label' => __( 'Long Shelf Life',   'solmaram' ) ],
         ];
         foreach ( $values as $v ) :
             $icon_url = wp_get_attachment_image_url( $v['img_id'], 'thumbnail' );
@@ -232,11 +235,29 @@
       </div>
       <?php endif; ?>
 
+      <?php
+      // Resolve the blog (posts) page for the current language, with fallbacks so
+      // the button never renders an empty href (which would just reload the home page).
+      $posts_page_id = (int) get_option( 'page_for_posts' );
+      if ( $posts_page_id && function_exists( 'pll_get_post' ) ) {
+          $posts_page_id = (int) ( pll_get_post( $posts_page_id, pll_current_language() ) ?: $posts_page_id );
+      }
+      $all_posts_url = $posts_page_id ? get_permalink( $posts_page_id ) : '';
+      if ( ! $all_posts_url && ! empty( $posts ) && $posts->have_posts() ) {
+          // No posts page configured — fall back to the newest post's permalink.
+          $posts->rewind_posts();
+          $posts->the_post();
+          $all_posts_url = get_permalink();
+          wp_reset_postdata();
+      }
+      ?>
+      <?php if ( $all_posts_url ) : ?>
       <div class="text-center mt-40">
-        <a href="<?php echo esc_url( get_permalink( get_option( 'page_for_posts' ) ) ); ?>" class="btn btn-outline">
+        <a href="<?php echo esc_url( $all_posts_url ); ?>" class="btn btn-outline">
           <?php esc_html_e( 'All Posts', 'solmaram' ); ?>
         </a>
       </div>
+      <?php endif; ?>
     </div>
   </section>
 
