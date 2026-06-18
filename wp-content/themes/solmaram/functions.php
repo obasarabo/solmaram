@@ -211,8 +211,18 @@ add_action( 'init', function () {
     foreach ( [ 'price', 'sale_price', 'regular_price' ] as $field ) {
         add_filter( "woocommerce_product_get_{$field}",           $convert );
         add_filter( "woocommerce_product_variation_get_{$field}", $convert );
+        add_filter( "woocommerce_variation_prices_{$field}",      $convert );
     }
+    // Variable products cache their variation price range; key that cache by the
+    // active currency so the converted range isn't shared between UAH and EUR.
+    add_filter( 'woocommerce_get_variation_prices_hash', function ( $hash ) use ( $currency ) {
+        $hash['sm_currency'] = $currency;
+        return $hash;
+    } );
 } );
+
+/* ── Hide SKU on the front-end product details page ────────────────────── */
+add_filter( 'wc_product_sku_enabled', '__return_false' );
 
 /* ── Disable array-format filter params in main query (AJAX handles them) ──── */
 // When ?product_cat[]=slug&use_case[]=slug arrive, WordPress sees product_cat
