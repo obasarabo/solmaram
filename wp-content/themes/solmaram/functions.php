@@ -92,7 +92,15 @@ function sm_switch_locale_full( string $locale ): void {
     switch_to_locale( $locale );
 
     unload_textdomain( 'solmaram' );
-    load_theme_textdomain( 'solmaram', get_template_directory() . '/languages' );
+    // Load the theme .mo by explicit path (like the WooCommerce reload below).
+    // load_theme_textdomain() does not reliably pick up the switched locale here,
+    // leaving theme strings untranslated on language-agnostic product pages.
+    $theme_mo = get_template_directory() . '/languages/' . $locale . '.mo';
+    if ( file_exists( $theme_mo ) ) {
+        load_textdomain( 'solmaram', $theme_mo );
+    } else {
+        load_theme_textdomain( 'solmaram', get_template_directory() . '/languages' );
+    }
 
     unload_textdomain( 'woocommerce' );
     $wc_mo = WP_LANG_DIR . '/plugins/woocommerce-' . $locale . '.mo';
@@ -199,8 +207,13 @@ add_action( 'init', function () {
 
     if ( $currency === 'UAH' ) return;
 
-    // Rates relative to UAH base: 1 EUR = 52 UAH
-    $rates = [ 'EUR' => 1 / 52 ];
+    // EUR is computed live from the UAH price: EUR = round( UAH / rate ).
+    // The rate is editable in SolMaram settings (option sm_eur_rate, default 52).
+    // Because conversion is dynamic (no stored EUR column), changing the rate
+    // updates every EUR price instantly — no recalculation step needed.
+    $eur_rate = (float) get_option( 'sm_eur_rate', 52 );
+    if ( $eur_rate <= 0 ) { $eur_rate = 52; }
+    $rates = [ 'EUR' => 1 / $eur_rate ];
     $rate  = $rates[ $currency ];
 
     add_filter( 'woocommerce_currency', fn() => $currency );
@@ -215,14 +228,22 @@ add_action( 'init', function () {
     }
     // Variable products cache their variation price range; key that cache by the
     // active currency so the converted range isn't shared between UAH and EUR.
-    add_filter( 'woocommerce_get_variation_prices_hash', function ( $hash ) use ( $currency ) {
-        $hash['sm_currency'] = $currency;
+    add_filter( 'woocommerce_get_variation_prices_hash', function ( $hash ) use ( $currency, $eur_rate ) {
+        $hash['sm_currency'] = $currency . '@' . $eur_rate; // include rate so changes recalc
         return $hash;
     } );
 } );
 
 /* ── Hide SKU on the front-end product details page ────────────────────── */
 add_filter( 'wc_product_sku_enabled', '__return_false' );
+
+/* ── Translate the package-size attribute label (pa_vaga) per language ──── */
+add_filter( 'woocommerce_attribute_label', function ( $label, $name ) {
+    if ( strtolower( (string) $name ) === 'pa_vaga' || $label === 'Вага' ) {
+        return __( 'Weight', 'solmaram' );
+    }
+    return $label;
+}, 10, 2 );
 
 /* ── Disable array-format filter params in main query (AJAX handles them) ──── */
 // When ?product_cat[]=slug&use_case[]=slug arrive, WordPress sees product_cat

@@ -23,6 +23,7 @@ class SM_Admin_Settings {
     public static function register_settings() {
         $options = [
             'sm_free_shipping_threshold' => 500,
+            'sm_eur_rate'                => 52,
             'sm_instagram_token'         => '',
             'sm_counter_customers'       => '10,000+',
             'sm_counter_orders'          => '50,000+',
@@ -49,6 +50,14 @@ class SM_Admin_Settings {
                   <input type="number" id="sm_free_shipping_threshold" name="sm_free_shipping_threshold"
                          value="<?php echo esc_attr( get_option( 'sm_free_shipping_threshold', 500 ) ); ?>" min="0" step="1">
                   <p class="description"><?php esc_html_e( 'Cart subtotal at which free shipping is unlocked.', 'solmaram' ); ?></p>
+                </td>
+              </tr>
+              <tr>
+                <th><label for="sm_eur_rate"><?php esc_html_e( 'EUR exchange rate (1 EUR = X ₴)', 'solmaram' ); ?></label></th>
+                <td>
+                  <input type="number" id="sm_eur_rate" name="sm_eur_rate"
+                         value="<?php echo esc_attr( get_option( 'sm_eur_rate', 52 ) ); ?>" min="1" step="0.01">
+                  <p class="description"><?php esc_html_e( 'EUR prices are calculated live as round(UAH ÷ rate). Updating this recalculates all EUR prices instantly.', 'solmaram' ); ?></p>
                 </td>
               </tr>
               <tr>

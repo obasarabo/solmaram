@@ -46,6 +46,17 @@
   outline: 2px solid rgba(74,124,89,.2);
 }
 
+/* Variation (package size) selector — left-align the label (browsers center <th>) */
+.woocommerce table.variations { width: 100%; border-collapse: collapse; margin: 0 0 16px; }
+.woocommerce table.variations th.label,
+.woocommerce table.variations td.value { text-align: left; vertical-align: middle; padding: 4px 0; }
+.woocommerce table.variations th.label { width: 1%; white-space: nowrap; padding-right: 12px; font-weight: 700; }
+.woocommerce table.variations td.value select {
+  min-width: 160px; border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  padding: 10px 14px; font-size: .95rem;
+}
+.woocommerce table.variations td.value .reset_variations { margin-left: 12px; font-size: .85rem; }
+
 /* Order table */
 .woocommerce table.shop_table {
   border-collapse: collapse;
