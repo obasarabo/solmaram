@@ -184,6 +184,37 @@ add_action( 'wp', function () {
     }
 } );
 
+// Keep the persistent sm_lang cookie in sync with the language the visitor is
+// actually viewing on translated (non-product) pages — homepage, shop, etc.,
+// where Polylang knows the language from the URL. Without this, a stale choice
+// from an earlier session (e.g. sm_lang=en after once viewing a product in
+// English) would keep overriding language-agnostic product pages even while the
+// rest of the site correctly shows Ukrainian.
+add_action( 'wp', function () {
+    if ( is_admin() || ! function_exists( 'pll_current_language' ) ) {
+        return;
+    }
+    if ( is_singular( 'product' ) || isset( $_GET['sm_set_lang'] ) ) {
+        return; // product pages use the agnostic detector; switch requests handle their own cookie
+    }
+    $cur = pll_current_language();
+    if ( ! $cur ) {
+        return;
+    }
+    if ( ! headers_sent() && ( ! isset( $_COOKIE['sm_lang'] ) || $_COOKIE['sm_lang'] !== $cur ) ) {
+        setcookie(
+            'sm_lang',
+            $cur,
+            time() + YEAR_IN_SECONDS,
+            defined( 'COOKIEPATH' ) && COOKIEPATH ? COOKIEPATH : '/',
+            defined( 'COOKIE_DOMAIN' ) ? COOKIE_DOMAIN : '',
+            is_ssl(),
+            false
+        );
+        $_COOKIE['sm_lang'] = $cur;
+    }
+} );
+
 /* ── Auto-tag new product reviews with current Polylang language ────────────── */
 // Without this, reviews submitted via the WooCommerce form lack _sm_review_lang
 // and are invisible to the homepage carousel meta_query filter.
