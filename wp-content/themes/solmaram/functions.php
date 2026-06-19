@@ -191,7 +191,12 @@ add_action( 'wp', function () {
 // English) would keep overriding language-agnostic product pages even while the
 // rest of the site correctly shows Ukrainian.
 add_action( 'wp', function () {
-    if ( is_admin() || ! function_exists( 'pll_current_language' ) ) {
+    // Only sync on genuine frontend page views. AJAX/REST requests (e.g. the
+    // WooCommerce cart-fragments `wc-ajax` call fired on every page load) carry no
+    // language context, so pll_current_language() would return the default and
+    // clobber the visitor's chosen language back to it.
+    if ( is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST )
+        || ! empty( $_GET['wc-ajax'] ) || ! function_exists( 'pll_current_language' ) ) {
         return;
     }
     if ( is_singular( 'product' ) || isset( $_GET['sm_set_lang'] ) ) {
