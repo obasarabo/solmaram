@@ -281,6 +281,30 @@ add_filter( 'woocommerce_attribute_label', function ( $label, $name ) {
     return $label;
 }, 10, 2 );
 
+/* ── Hide the WooCommerce weight/dimensions rows from the Additional ──────
+   Information table. The package size is shown via the pa_vaga attribute;
+   the raw product weight is kept (used by Nova Poshta shipping) but not
+   displayed, so it doesn't duplicate the "Weight" row. */
+add_filter( 'woocommerce_display_product_attributes', function ( $attributes, $product ) {
+    unset( $attributes['weight'], $attributes['dimensions'] );
+    return $attributes;
+}, 10, 2 );
+
+/* ── Per-product nutrition facts (multilingual) in the Additional Info tab ─
+   Stored as HTML in postmeta _sm_nutrition_{ua|en|pt}; rendered for the
+   current language (falls back to the default language). */
+add_action( 'woocommerce_product_additional_information', function ( $product ) {
+    $default = function_exists( 'pll_default_language' ) ? pll_default_language() : 'ua';
+    $lang    = function_exists( 'pll_current_language' ) ? ( pll_current_language() ?: $default ) : $default;
+    $html    = get_post_meta( $product->get_id(), "_sm_nutrition_{$lang}", true );
+    if ( ! $html ) {
+        $html = get_post_meta( $product->get_id(), "_sm_nutrition_{$default}", true );
+    }
+    if ( $html ) {
+        echo '<div class="sm-nutrition">' . wp_kses_post( $html ) . '</div>';
+    }
+}, 20 );
+
 /* ── Disable array-format filter params in main query (AJAX handles them) ──── */
 // When ?product_cat[]=slug&use_case[]=slug arrive, WordPress sees product_cat
 // as a recognized tax query var and tries to parse it, but it's an array which

@@ -57,6 +57,17 @@
 }
 .woocommerce table.variations td.value .reset_variations { margin-left: 12px; font-size: .85rem; }
 
+/* Nutrition facts block in the Additional Information tab */
+.sm-nutrition { margin-top: 28px; }
+.sm-nutrition__title { font-family: var(--font-heading); font-size: 1.15rem; margin: 0 0 8px; }
+.sm-nutrition__meta { color: var(--color-text-muted); margin: 0 0 12px; line-height: 1.5; }
+.sm-nutrition__table { width: 100%; max-width: 460px; border-collapse: collapse; }
+.sm-nutrition__table th,
+.sm-nutrition__table td { padding: 7px 12px; border-bottom: 1px solid var(--color-border); }
+.sm-nutrition__table th { text-align: left; font-weight: 600; }
+.sm-nutrition__table td { text-align: right; white-space: nowrap; }
+.sm-nutrition__note { font-size: .85rem; color: var(--color-text-muted); margin-top: 10px; }
+
 /* Order table */
 .woocommerce table.shop_table {
   border-collapse: collapse;
