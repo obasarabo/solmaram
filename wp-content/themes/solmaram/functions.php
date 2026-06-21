@@ -522,8 +522,9 @@ add_filter( 'get_term', function ( $term ) {
         ],
         'sm_use_case' => [
             'snack'      => [ 'en' => 'Snack',        'pt' => 'Snack' ],
-            'cooking'    => [ 'en' => 'Cooking',      'pt' => 'Culinária' ],
+            'cooking'    => [ 'en' => 'Culinary',     'pt' => 'Culinária' ],
             'ready-meal' => [ 'en' => 'Ready Meal',   'pt' => 'Refeição pronta' ],
+            'sweets'     => [ 'en' => 'Sweets',       'pt' => 'Doces' ],
         ],
     ];
 
