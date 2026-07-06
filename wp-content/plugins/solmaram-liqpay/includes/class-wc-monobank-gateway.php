@@ -3,7 +3,9 @@ defined( 'ABSPATH' ) || exit;
 
 class WC_SM_Monobank_Gateway extends WC_Payment_Gateway {
 
-    private const API_URL = 'https://api.monobank.ua/api/merchant/invoice/create';
+    private const API_URL         = 'https://api.monobank.ua/api/merchant/invoice/create';
+    private const PUBKEY_URL       = 'https://api.monobank.ua/api/merchant/pubkey';
+    private const PUBKEY_TRANSIENT = 'sm_monobank_pubkey';
 
     public function __construct() {
         $this->id                 = 'sm_monobank';
@@ -86,15 +88,80 @@ class WC_SM_Monobank_Gateway extends WC_Payment_Gateway {
         return [ 'result' => 'success', 'redirect' => $pay_url ];
     }
 
+    /**
+     * Fetch Monobank's ECDSA public key (base64-encoded PEM) from the merchant
+     * pubkey endpoint. Cached for a day; pass $force_refresh to bypass the cache
+     * (used to handle key rotation when a verification fails).
+     */
+    private function get_public_key( bool $force_refresh = false ): string {
+        if ( ! $force_refresh ) {
+            $cached = get_transient( self::PUBKEY_TRANSIENT );
+            if ( is_string( $cached ) && $cached !== '' ) {
+                return $cached;
+            }
+        }
+
+        $token = $this->get_option( 'token' );
+        if ( ! $token ) return '';
+
+        $response = wp_remote_get( self::PUBKEY_URL, [
+            'timeout' => 10,
+            'headers' => [ 'X-Token' => $token ],
+        ] );
+        if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+            return '';
+        }
+
+        $body = json_decode( wp_remote_retrieve_body( $response ), true );
+        $key  = (string) ( $body['key'] ?? '' );
+        if ( $key !== '' ) {
+            set_transient( self::PUBKEY_TRANSIENT, $key, DAY_IN_SECONDS );
+        }
+        return $key;
+    }
+
+    /**
+     * Verify Monobank's X-Sign webhook header: a base64 ECDSA-SHA256 signature
+     * over the raw request body, checked against the merchant public key. Tries
+     * the cached key first, then re-fetches once (key rotation) before failing.
+     */
+    private function verify_signature( string $body, string $x_sign ): bool {
+        if ( $x_sign === '' ) return false;
+        $sig = base64_decode( $x_sign, true );
+        if ( $sig === false || $sig === '' ) return false;
+
+        foreach ( [ false, true ] as $force_refresh ) {
+            $key_b64 = $this->get_public_key( $force_refresh );
+            if ( $key_b64 === '' ) continue;
+            $pem = base64_decode( $key_b64, true );
+            if ( $pem === false ) continue;
+            if ( self::verify_body_signature( $body, $sig, $pem ) ) {
+                return true;
+            }
+            // Bad signature or verify error: on the first pass, retry with a
+            // freshly fetched key in case Monobank rotated it; then give up.
+        }
+        return false;
+    }
+
+    /**
+     * Pure ECDSA-SHA256 verification of a raw body against a PEM public key.
+     * Static and dependency-free so the crypto can be unit-tested in isolation.
+     */
+    public static function verify_body_signature( string $body, string $signature_raw, string $pubkey_pem ): bool {
+        $pubkey = openssl_pkey_get_public( $pubkey_pem );
+        if ( ! $pubkey ) return false;
+        return openssl_verify( $body, $signature_raw, $pubkey, OPENSSL_ALGO_SHA256 ) === 1;
+    }
+
     public function handle_callback() {
         $body = file_get_contents( 'php://input' );
         if ( ! $body ) { status_header( 400 ); exit; }
 
-        // Verify X-Sign header: base64( sha256( base64(body) + token ) )
-        $token    = $this->get_option( 'token' );
-        $x_sign   = $_SERVER['HTTP_X_SIGN'] ?? '';
-        $expected = base64_encode( hash( 'sha256', base64_encode( $body ) . $token, true ) );
-        if ( ! hash_equals( $expected, $x_sign ) ) {
+        // Verify the X-Sign header (base64 ECDSA-SHA256 over the raw body) against
+        // Monobank's merchant public key. See Monobank Acquiring API docs.
+        $x_sign = $_SERVER['HTTP_X_SIGN'] ?? '';
+        if ( ! $this->verify_signature( $body, $x_sign ) ) {
             status_header( 400 );
             exit( 'Invalid signature' );
         }
@@ -109,6 +176,20 @@ class WC_SM_Monobank_Gateway extends WC_Payment_Gateway {
         if ( ! $order ) exit;
 
         if ( $status === 'success' && ! $order->is_paid() ) {
+            // Defense-in-depth: confirm amount (minor units) + currency (980 UAH)
+            // match the order before completing payment.
+            $paid_amount = (int) ( $payload['amount'] ?? 0 );
+            $paid_ccy    = (int) ( $payload['ccy'] ?? 0 );
+            $expected    = (int) round( (float) $order->get_total() * 100 );
+            if ( abs( $paid_amount - $expected ) > 1 || ( $paid_ccy && $paid_ccy !== 980 ) ) {
+                $order->add_order_note( sprintf(
+                    /* translators: 1: paid amount (minor units), 2: paid currency code, 3: expected amount */
+                    __( 'Monobank callback rejected — amount/currency mismatch: got %1$d (ccy %2$d), expected %3$d (980).', 'solmaram' ),
+                    $paid_amount, $paid_ccy, $expected
+                ) );
+                status_header( 400 );
+                exit( 'Amount mismatch' );
+            }
             $order->payment_complete( $invoice_id );
             $order->add_order_note( __( 'Monobank payment confirmed.', 'solmaram' ) );
         } elseif ( in_array( $status, [ 'failure', 'reversed' ], true ) ) {

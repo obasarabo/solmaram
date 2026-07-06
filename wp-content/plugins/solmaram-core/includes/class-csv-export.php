@@ -52,6 +52,21 @@ class SM_CSV_Export {
         <?php
     }
 
+    /**
+     * Neutralize spreadsheet formula (CSV) injection. A leading =, +, -, or @
+     * makes Excel/LibreOffice/Sheets treat the cell as a formula — and Excel
+     * ignores leading whitespace before the trigger, so we test the trimmed
+     * value. Leading tab/CR/LF are themselves triggers, so those are caught too.
+     * Neutralized cells are prefixed with a single quote.
+     */
+    private static function csv_cell( $value ) {
+        $value = (string) $value;
+        if ( preg_match( '/^\s*[=+\-@]/', $value ) || preg_match( '/^[\t\r\n]/', $value ) ) {
+            return "'" . $value;
+        }
+        return $value;
+    }
+
     public static function handle_export() {
         if ( ! isset( $_POST['sm_do_export'] ) ) return;
         if ( ! current_user_can( 'manage_woocommerce' ) ) wp_die( 'Unauthorized' );
@@ -114,7 +129,7 @@ class SM_CSV_Export {
             $shipping_lines = $order->get_shipping_methods();
             $shipping_name  = $shipping_lines ? current( $shipping_lines )->get_method_title() : '';
 
-            fputcsv( $fp, [
+            fputcsv( $fp, array_map( [ __CLASS__, 'csv_cell' ], [
                 $order->get_id(),
                 $order->get_date_created()?->date( 'Y-m-d H:i' ),
                 wc_get_order_status_name( $order->get_status() ),
@@ -128,7 +143,7 @@ class SM_CSV_Export {
                 $order->get_total(),
                 $order->get_payment_method_title(),
                 $shipping_name,
-            ] );
+            ] ) );
         }
         fclose( $fp );
         exit;

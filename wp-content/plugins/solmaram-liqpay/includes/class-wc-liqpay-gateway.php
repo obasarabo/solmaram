@@ -28,7 +28,7 @@ class WC_SM_LiqPay_Gateway extends WC_Payment_Gateway {
             'description' => [ 'title' => __( 'Description', 'solmaram' ), 'type' => 'textarea', 'default' => __( 'Secure payment via LiqPay.', 'solmaram' ) ],
             'public_key'  => [ 'title' => __( 'LiqPay Public Key', 'solmaram' ), 'type' => 'text', 'default' => '' ],
             'private_key' => [ 'title' => __( 'LiqPay Private Key', 'solmaram' ), 'type' => 'password', 'default' => '' ],
-            'sandbox'     => [ 'title' => __( 'Sandbox Mode', 'solmaram' ), 'type' => 'checkbox', 'default' => 'yes', 'description' => __( 'Use LiqPay sandbox for testing.', 'solmaram' ) ],
+            'sandbox'     => [ 'title' => __( 'Sandbox Mode', 'solmaram' ), 'type' => 'checkbox', 'default' => 'no', 'description' => __( 'Use LiqPay sandbox for testing. Must be OFF in production — sandbox callbacks are not real payments.', 'solmaram' ) ],
         ];
     }
 
@@ -82,6 +82,16 @@ class WC_SM_LiqPay_Gateway extends WC_Payment_Gateway {
             exit( 'Bad request' );
         }
 
+        // Defense-in-depth: optionally restrict callbacks to LiqPay's source IPs.
+        // Empty by default (LiqPay does not publish a stable range) — enable by
+        // returning a non-empty list from the filter. Uses REMOTE_ADDR only, so
+        // behind a reverse proxy either leave it empty or resolve the real IP.
+        $allowed_ips = (array) apply_filters( 'sm_liqpay_allowed_ips', [] );
+        if ( $allowed_ips && ! in_array( $_SERVER['REMOTE_ADDR'] ?? '', $allowed_ips, true ) ) {
+            status_header( 403 );
+            exit( 'Forbidden' );
+        }
+
         $api = $this->get_api();
         if ( ! $api->verify_signature( $data, $signature ) ) {
             status_header( 400 );
@@ -98,9 +108,29 @@ class WC_SM_LiqPay_Gateway extends WC_Payment_Gateway {
         $order    = wc_get_order( $order_id );
         if ( ! $order ) exit;
 
-        $status = $response['status'] ?? '';
+        $status  = $response['status'] ?? '';
+        $sandbox = $this->get_option( 'sandbox' ) === 'yes';
 
-        if ( in_array( $status, [ 'success', 'sandbox' ], true ) && ! $order->is_paid() ) {
+        // Only honour the 'sandbox' success status when the gateway is actually in
+        // sandbox mode — never treat a sandbox callback as a real payment in prod.
+        $paid_statuses = $sandbox ? [ 'success', 'sandbox' ] : [ 'success' ];
+
+        if ( in_array( $status, $paid_statuses, true ) && ! $order->is_paid() ) {
+            // Defense-in-depth: confirm the paid amount + currency match the order
+            // (the signature already covers these, but this guards against future
+            // logic changes and echoes a clear note on any mismatch).
+            $paid_amount = round( (float) ( $response['amount'] ?? 0 ), 2 );
+            $paid_ccy    = (string) ( $response['currency'] ?? '' );
+            $expected    = round( (float) $order->get_total(), 2 );
+            if ( abs( $paid_amount - $expected ) > 0.01 || ( $paid_ccy && $paid_ccy !== $order->get_currency() ) ) {
+                $order->add_order_note( sprintf(
+                    /* translators: 1: paid amount, 2: paid currency, 3: expected amount, 4: expected currency */
+                    __( 'LiqPay callback rejected — amount/currency mismatch: got %1$s %2$s, expected %3$s %4$s.', 'solmaram' ),
+                    $paid_amount, $paid_ccy, $expected, $order->get_currency()
+                ) );
+                status_header( 400 );
+                exit( 'Amount mismatch' );
+            }
             $order->payment_complete( $response['payment_id'] ?? '' );
             $order->add_order_note( __( 'LiqPay payment confirmed.', 'solmaram' ) );
         } elseif ( $status === 'failure' ) {
