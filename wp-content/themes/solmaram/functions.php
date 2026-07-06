@@ -281,6 +281,38 @@ add_filter( 'woocommerce_attribute_label', function ( $label, $name ) {
     return $label;
 }, 10, 2 );
 
+/* ── Localize the package-size unit (г → g) for non-Ukrainian languages ───
+   The pa_vaga terms are stored with the Ukrainian unit ("50 г", "100 г").
+   On EN/PT pages we display the Latin "g" instead, in the variation dropdown,
+   the cart/checkout line item and the Additional Information tab. */
+function sm_size_unit_is_latin(): bool {
+    if ( ! function_exists( 'pll_current_language' ) || ! function_exists( 'pll_default_language' ) ) {
+        return false;
+    }
+    $lang = (string) pll_current_language();
+    return $lang !== '' && $lang !== pll_default_language();
+}
+
+function sm_localize_size_label( string $label ): string {
+    return sm_size_unit_is_latin() ? str_replace( 'г', 'g', $label ) : $label;
+}
+
+// Variation dropdown option + cart/checkout line item ("50 г" → "50 g").
+add_filter( 'woocommerce_variation_option_name', function ( $name, $term = null, $attribute = '', $product = null ) {
+    if ( strpos( strtolower( (string) $attribute ), 'vaga' ) !== false ) {
+        return sm_localize_size_label( (string) $name );
+    }
+    return $name;
+}, 10, 4 );
+
+// Additional Information tab value ("50 г, 100 г" → "50 g, 100 g").
+add_filter( 'woocommerce_attribute', function ( $value, $attribute, $values ) {
+    if ( is_object( $attribute ) && method_exists( $attribute, 'get_name' ) && $attribute->get_name() === 'pa_vaga' ) {
+        return sm_localize_size_label( (string) $value );
+    }
+    return $value;
+}, 10, 3 );
+
 /* ── Hide the WooCommerce weight/dimensions rows from the Additional ──────
    Information table. The package size is shown via the pa_vaga attribute;
    the raw product weight is kept (used by Nova Poshta shipping) but not
