@@ -397,7 +397,6 @@ add_action( 'after_setup_theme', function () {
     // Image sizes
     add_image_size( 'product-card',   600, 600, true );
     add_image_size( 'product-thumb',  100, 100, true );
-    add_image_size( 'blog-card',      800, 500, true );
     add_image_size( 'hero-full',     1920, 800, true );
 } );
 

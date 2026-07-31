@@ -52,37 +52,7 @@ $search_query = get_search_query();
     </section>
     <?php endif; ?>
 
-    <?php
-    // Blog posts section
-    $post_results = new WP_Query( [
-        's'              => $search_query,
-        'post_type'      => 'post',
-        'posts_per_page' => 6,
-        'post_status'    => 'publish',
-    ] );
-    ?>
-    <section class="search-results-section">
-      <h2><?php esc_html_e( 'Articles & Recipes', 'solmaram' ); ?></h2>
-      <?php if ( $post_results->have_posts() ) : ?>
-        <div class="grid-3 blog-grid">
-          <?php while ( $post_results->have_posts() ) : $post_results->the_post(); ?>
-            <article class="blog-card">
-              <?php if ( has_post_thumbnail() ) : ?>
-                <a class="blog-card__image" href="<?php the_permalink(); ?>"><?php the_post_thumbnail( 'blog-card' ); ?></a>
-              <?php endif; ?>
-              <div class="blog-card__body">
-                <h3 class="blog-card__title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-                <p class="blog-card__excerpt"><?php the_excerpt(); ?></p>
-              </div>
-            </article>
-          <?php endwhile; wp_reset_postdata(); ?>
-        </div>
-      <?php else : ?>
-        <p class="text-muted"><?php esc_html_e( 'No articles found.', 'solmaram' ); ?></p>
-      <?php endif; ?>
-    </section>
-
-    <?php if ( ! have_posts() && ! $product_results->have_posts() ) : ?>
+    <?php if ( empty( $product_results ) || ! $product_results->have_posts() ) : ?>
     <div class="no-results-suggest">
       <p><?php esc_html_e( 'Nothing matched your search. Try different keywords, or browse our popular products:', 'solmaram' ); ?></p>
       <?php if ( class_exists( 'WooCommerce' ) ) :

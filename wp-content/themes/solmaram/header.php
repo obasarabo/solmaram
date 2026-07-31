@@ -125,12 +125,7 @@
 
       <?php if ( class_exists( 'WooCommerce' ) ) : ?>
 
-        <!-- My Account -->
-        <a class="header-btn" href="<?php echo esc_url( wc_get_account_endpoint_url( 'dashboard' ) ); ?>" aria-label="<?php esc_attr_e( 'My Account', 'solmaram' ); ?>">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-          </svg>
-        </a>
+        <?php // Customer accounts are disabled — see SM_Disable_Accounts. ?>
 
         <!-- Cart -->
         <a class="header-btn cart-btn js-mini-cart-trigger" href="<?php echo esc_url( wc_get_cart_url() ); ?>" aria-label="<?php esc_attr_e( 'Cart', 'solmaram' ); ?>">

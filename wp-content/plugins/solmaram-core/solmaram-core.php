@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: SolMaram Core
- * Description: Core functionality for SolMaram — recipe meta, free-shipping bar, Instagram feed, CSV export, trust counters, AJAX filters.
+ * Description: Core functionality for SolMaram — free-shipping bar, Instagram feed, CSV export, trust counters, AJAX filters.
  * Version:     1.0.0
  * Author:      SolMaram
  * Text Domain: solmaram
@@ -76,16 +76,16 @@ add_action( 'init', function () {
 add_action( 'plugins_loaded', function () {
     if ( ! class_exists( 'WooCommerce' ) ) return;
 
-    require_once SM_CORE_PATH . 'includes/class-recipe-meta.php';
     require_once SM_CORE_PATH . 'includes/class-free-shipping-bar.php';
     require_once SM_CORE_PATH . 'includes/class-instagram-feed.php';
     require_once SM_CORE_PATH . 'includes/class-csv-export.php';
     require_once SM_CORE_PATH . 'includes/class-trust-counters.php';
     require_once SM_CORE_PATH . 'includes/class-inventory-manager.php';
     require_once SM_CORE_PATH . 'includes/class-product-i18n.php';
+    require_once SM_CORE_PATH . 'includes/class-disable-accounts.php';
+    require_once SM_CORE_PATH . 'includes/class-disable-blog.php';
     require_once SM_CORE_PATH . 'admin/settings-page.php';
 
-    SM_Recipe_Meta::init();
     SM_Free_Shipping_Bar::init();
     SM_Instagram_Feed::init();
     SM_CSV_Export::init();
@@ -93,6 +93,8 @@ add_action( 'plugins_loaded', function () {
     SM_Admin_Settings::init();
     SM_Inventory_Manager::init();
     SM_Product_I18n::init();
+    SM_Disable_Accounts::init();
+    SM_Disable_Blog::init();
 
     /* ── AJAX: product filter (FR-01.3) ──────────────────────────── */
     add_action( 'wp_ajax_solmaram_filter_products',        'solmaram_ajax_filter_products' );

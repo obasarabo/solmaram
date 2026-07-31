@@ -198,70 +198,7 @@
     </div>
   </section>
 
-  <?php /* ── 7. Blog & Recipes ────────────────────────────────────── */ ?>
-  <section class="section section--alt section-blog">
-    <div class="container">
-      <h2 class="section-title text-center"><?php esc_html_e( 'Blog & Recipes', 'solmaram' ); ?></h2>
-
-      <?php
-      $posts = new WP_Query( [
-          'posts_per_page' => 3,
-          'post_status'    => 'publish',
-          'no_found_rows'  => true,
-      ] );
-      ?>
-      <?php if ( $posts->have_posts() ) : ?>
-      <div class="grid-3 blog-grid">
-        <?php while ( $posts->have_posts() ) : $posts->the_post(); ?>
-          <article class="blog-card">
-            <?php if ( has_post_thumbnail() ) : ?>
-              <a class="blog-card__image" href="<?php the_permalink(); ?>">
-                <?php the_post_thumbnail( 'blog-card', [ 'alt' => esc_attr( get_the_title() ) ] ); ?>
-              </a>
-            <?php endif; ?>
-            <div class="blog-card__body">
-              <div class="blog-card__meta text-muted">
-                <?php the_category( ' · ' ); ?>
-                <span>·</span>
-                <time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php the_date(); ?></time>
-              </div>
-              <h3 class="blog-card__title">
-                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-              </h3>
-              <p class="blog-card__excerpt"><?php the_excerpt(); ?></p>
-            </div>
-          </article>
-        <?php endwhile; wp_reset_postdata(); ?>
-      </div>
-      <?php endif; ?>
-
-      <?php
-      // Resolve the blog (posts) page for the current language, with fallbacks so
-      // the button never renders an empty href (which would just reload the home page).
-      $posts_page_id = (int) get_option( 'page_for_posts' );
-      if ( $posts_page_id && function_exists( 'pll_get_post' ) ) {
-          $posts_page_id = (int) ( pll_get_post( $posts_page_id, pll_current_language() ) ?: $posts_page_id );
-      }
-      $all_posts_url = $posts_page_id ? get_permalink( $posts_page_id ) : '';
-      if ( ! $all_posts_url && ! empty( $posts ) && $posts->have_posts() ) {
-          // No posts page configured — fall back to the newest post's permalink.
-          $posts->rewind_posts();
-          $posts->the_post();
-          $all_posts_url = get_permalink();
-          wp_reset_postdata();
-      }
-      ?>
-      <?php if ( $all_posts_url ) : ?>
-      <div class="text-center mt-40">
-        <a href="<?php echo esc_url( $all_posts_url ); ?>" class="btn btn-outline">
-          <?php esc_html_e( 'All Posts', 'solmaram' ); ?>
-        </a>
-      </div>
-      <?php endif; ?>
-    </div>
-  </section>
-
-  <?php /* ── 8. Instagram feed ────────────────────────────────────── */ ?>
+  <?php /* ── 7. Instagram feed ────────────────────────────────────── */ ?>
   <?php
   if ( class_exists( 'SM_Instagram_Feed' ) ) :
       $photos = SM_Instagram_Feed::get_photos( 8 );

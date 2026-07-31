@@ -271,18 +271,6 @@
 .value-item__icon-img { width: 110px; height: 110px; object-fit: contain; }
 .value-item__label { font-weight: 700; font-size: .95rem; color: #1a2e1a; }
 
-/* ── Blog cards ────────────────────────────────────────────────────── */
-.blog-card { display: flex; flex-direction: column; border-radius: var(--radius-lg); overflow: hidden; background: var(--color-bg); box-shadow: var(--shadow-sm); }
-.blog-card__image { aspect-ratio: 16/10; overflow: hidden; }
-.blog-card__image img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
-.blog-card:hover .blog-card__image img { transform: scale(1.04); }
-.blog-card__body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
-.blog-card__meta { font-size: .8rem; }
-.blog-card__title { font-size: 1.05rem; }
-.blog-card__title a { color: var(--color-text); }
-.blog-card__title a:hover { color: var(--color-primary); }
-.blog-card__excerpt { font-size: .9rem; color: var(--color-text-muted); flex: 1; }
-
 /* ── Reviews carousel ──────────────────────────────────────────────── */
 .reviews-carousel { display: flex; gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; }
 .review-card { min-width: 280px; max-width: 340px; flex-shrink: 0; scroll-snap-align: start; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 24px; }
@@ -409,19 +397,6 @@ textarea#order_comments { width: 100%; border: 1px solid var(--color-border); bo
 .my-account-nav__list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
 .my-account-nav__list a { display: block; padding: 10px 14px; border-radius: var(--radius-md); font-size: .9rem; color: var(--color-text); transition: background .15s; font-weight: 500; }
 .my-account-nav__list a:hover, .my-account-nav__list .is-active a { background: var(--color-bg-alt); color: var(--color-primary); }
-
-/* ── Blog / single ─────────────────────────────────────────────────── */
-.blog-index { padding-block: 48px; }
-.blog-index__header { margin-bottom: 40px; }
-.entry-content { max-width: 720px; margin-inline: auto; }
-.entry-content p, .entry-content ul, .entry-content ol { margin-bottom: 1.25rem; line-height: 1.75; }
-.entry-content h2, .entry-content h3 { margin-block: 1.5rem .5rem; }
-
-/* ── Recipe meta ───────────────────────────────────────────────────── */
-.recipe-meta { display: flex; gap: 24px; flex-wrap: wrap; background: var(--color-bg-alt); border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 32px; }
-.recipe-meta__item { display: flex; flex-direction: column; font-size: .85rem; }
-.recipe-meta__label { font-weight: 700; text-transform: uppercase; font-size: .7rem; color: var(--color-text-muted); }
-.recipe-products { margin-top: 40px; padding-top: 40px; border-top: 1px solid var(--color-border); }
 
 /* ── Sublimation page ──────────────────────────────────────────────── */
 .sublimation-comparison { overflow-x: auto; margin-block: 40px; }

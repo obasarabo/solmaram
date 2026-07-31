@@ -10,10 +10,7 @@ if ( ! is_checkout() ) return;
 wc_print_notices();
 do_action( 'woocommerce_before_checkout_form', $checkout );
 
-// No account required (guest checkout)
-if ( ! WC()->checkout()->is_registration_required() && is_user_logged_in() ) {
-    // already logged in — no registration block needed
-}
+// Guest checkout only — customer accounts are disabled (see SM_Disable_Accounts).
 ?>
 <form name="checkout" method="post" class="checkout woocommerce-checkout" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
 
@@ -35,18 +32,6 @@ if ( ! WC()->checkout()->is_registration_required() && is_user_logged_in() ) {
 
     <!-- STEP 1: Contact + Delivery -->
     <div class="checkout-step js-checkout-step is-active" data-step="1">
-
-      <?php if ( ! is_user_logged_in() ) : ?>
-      <div class="checkout-login-notice">
-        <?php
-        $login_url = wc_get_page_permalink( 'myaccount' );
-        printf(
-            wp_kses_post( __( 'Already have an account? <a href="%s">Log in</a>', 'solmaram' ) ),
-            esc_url( $login_url )
-        );
-        ?>
-      </div>
-      <?php endif; ?>
 
       <div class="checkout-section">
         <h2><?php esc_html_e( 'Contact Details', 'solmaram' ); ?></h2>
