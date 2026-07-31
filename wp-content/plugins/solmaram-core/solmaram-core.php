@@ -31,11 +31,16 @@ add_action( 'init', function () {
         'rewrite'           => [ 'slug' => 'use-case', 'with_front' => false ],
     ] );
 
-    // Seed default terms on first run
+    // Seed default terms on first run. Names are the Ukrainian canonical ones;
+    // EN/PT display names live in the get_term filter in the theme's functions.php
+    // (except 'horeca', which reads the same in all three languages).
     $terms = [
         'snack'      => __( 'Снек', 'solmaram' ),
-        'cooking'    => __( 'Приготування', 'solmaram' ),
+        'cooking'    => __( 'Кулінарія', 'solmaram' ),
         'ready-meal' => __( 'Готова страва', 'solmaram' ),
+        'sweets'     => __( 'Солодощі', 'solmaram' ),
+        'cocktails'  => __( 'Коктейлі', 'solmaram' ),
+        'horeca'     => 'HoReCa',
     ];
     foreach ( $terms as $slug => $name ) {
         if ( ! term_exists( $slug, 'sm_use_case' ) ) {

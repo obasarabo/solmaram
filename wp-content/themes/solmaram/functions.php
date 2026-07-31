@@ -556,6 +556,9 @@ add_filter( 'get_term', function ( $term ) {
             'cooking'    => [ 'en' => 'Culinary',     'pt' => 'Culinária' ],
             'ready-meal' => [ 'en' => 'Ready Meal',   'pt' => 'Refeição pronta' ],
             'sweets'     => [ 'en' => 'Sweets',       'pt' => 'Doces' ],
+            'cocktails'  => [ 'en' => 'Cocktails',    'pt' => 'Cocktails' ],
+            // 'horeca' is intentionally absent — HoReCa is spelled the same in
+            // all three languages, so it falls through to the canonical term name.
         ],
     ];
 
