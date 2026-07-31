@@ -15,7 +15,7 @@
 /* ── Ukrainian (default — stored in Customizer theme mod) ─────────── */
 $ua_about = '<p>Енергія природи, збережена на піку свіжості.</p>
 
-<p>SolMaram — український виробник натуральних сублімованих овочів, фруктів та ягід. Ми контролюємо кожен етап процесу — від вибору сировини до запечатування готового пакунку — щоб лише природа потрапляла на ваш стіл.</p>
+<p>SolMaram — виробник натуральних сублімованих овочів, фруктів та ягід. Ми контролюємо кожен етап процесу — від вибору сировини до запечатування готового пакунку — щоб лише природа потрапляла на ваш стіл.</p>
 
 <p>Ми також є сертифікованим імпортером ЄС преміальних сублімованих продуктів, що привозимо найкраще з Європи нашим покупцям.</p>
 
@@ -38,7 +38,7 @@ echo "UA about text saved (theme mod).\n";
 /* ── English ──────────────────────────────────────────────────────── */
 $en_about = '<p>Nature\'s energy, captured at its peak.</p>
 
-<p>SolMaram is a Ukrainian producer of natural freeze-dried vegetables, fruits, and berries. We oversee every step of the process — from sourcing raw ingredients to sealing the final package — so that nothing but nature reaches your table.</p>
+<p>SolMaram is a producer of natural freeze-dried vegetables, fruits, and berries. We oversee every step of the process — from sourcing raw ingredients to sealing the final package — so that nothing but nature reaches your table.</p>
 
 <p>We are also an EU-certified importer of premium freeze-dried products, bringing the best of European quality to our customers.</p>
 
@@ -61,7 +61,7 @@ echo "EN about text saved.\n";
 /* ── Portuguese ───────────────────────────────────────────────────── */
 $pt_about = '<p>A energia da natureza, capturada no seu auge.</p>
 
-<p>A SolMaram é um produtor ucraniano de vegetais, frutas e bagas liofilizados de forma natural. Supervisionamos cada etapa do processo — desde o abastecimento de ingredientes crus até à selagem da embalagem final — para que apenas a natureza chegue à sua mesa.</p>
+<p>A SolMaram é um produtor de vegetais, frutas e bagas liofilizados de forma natural. Supervisionamos cada etapa do processo — desde o abastecimento de ingredientes crus até à selagem da embalagem final — para que apenas a natureza chegue à sua mesa.</p>
 
 <p>Somos também um importador certificado pela UE de produtos liofilizados premium, trazendo o melhor da qualidade europeia aos nossos clientes.</p>
 
